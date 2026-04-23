@@ -3,10 +3,14 @@ class ListPenerimaanPenolakan_Page {
     return cy.get('table tbody tr');
   }
 
-  clickEditButton(rowIndex) {
-    this.tableRows.eq(rowIndex)
-      .find('button:has(svg.lucide-pencil)')
-      .click();
+  // Selector: iconTambahButton
+  get iconTambahButton() {
+    return cy.get('button').find('svg.lucide-plus').parent();
+  }
+
+  // Action: clickIconTambah
+  clickIconTambah() {
+    this.iconTambahButton.click();
   }
 
   getRowCount() {

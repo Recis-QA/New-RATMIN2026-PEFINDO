@@ -21,32 +21,31 @@ describe('Penerimaan Penolakan — produksi data', () => {
     cy.visit('/dashboard');
   });
 
-  it('Submit semua data Penerimaan/Penolakan', () => {
+  it('Submit semua data Penerimaan/Penolakan hingga antrian habis', () => {
+    // Navigasi dilakukan SEKALI di luar loop
+    Navigasi.clickPenerimaanPenolakanMenuItem();
+    cy.get('table tbody tr').should('exist');
+
     cy.fixture('penerimaan_penolakan').then((records) => {
-      records.forEach((data) => {
-        // Navigasi ke menu
-        Navigasi.clickPenerimaanPenolakanMenuItem();
-        cy.get('table tbody tr').should('exist');
+      ListPP.getRowCount().then((rowCount) => {
 
-        // Buka form edit baris pertama (baris hilang dari list setelah submit)
-        ListPP.clickEditButton(0);
-        FormPP.saveToDraftButton.should('be.visible');
+        for (let i = 0; i < rowCount; i++) {
+          // Selalu klik index 0 karena baris hilang dari list setelah submit
+          ListPP.clickIconTambah();
+          FormPP.saveToDraftButton.should('be.visible');
 
-        // Isi form
-        FormPP.applyFormConfig(data);
+          // Isi form dengan data fixture sesuai urutan baris
+          FormPP.applyFormConfig(records[i]);
 
-        // Save to Draft dulu sebelum Submit
-        FormPP.clickSaveToDraft();
-        cy.wait(500);
+          // Save to Draft lalu Submit
+          FormPP.clickSaveToDraft();
+          cy.wait(500);
 
-        // Submit & konfirmasi popup
-        FormPP.clickSubmit();
-        FormPP.clickConfirmSubmit();
-        cy.wait(500);
+          FormPP.clickSubmit();
+          FormPP.clickConfirmSubmit();
+          cy.wait(500);
+        }
       });
-
-      // Setelah seluruh data selesai diproses, lanjut ke menu berikutnya
-      Navigasi.clickUsulanTimAnalystMenuItem();
     });
   });
 });
