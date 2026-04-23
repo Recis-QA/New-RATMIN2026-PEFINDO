@@ -1,0 +1,72 @@
+[
+    {
+      "tahun_beroperasi": 1995,
+      "didirikan_untuk": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+      "periode": {
+        "start": 1999,
+        "end": 2011
+      },
+      "opini_auditor": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+      "criteria": ["Memenuhi"],
+      "tanggal": "{{current_date}}",
+      "sector": "Information Technology",
+      "group": "Software & Services",
+      "industri": "Information Technology & IT Services"
+    },
+    {
+      "tahun_beroperasi": 2001,
+      "didirikan_untuk": "Company established for enterprise software solutions.",
+      "periode": {
+        "start": 2005,
+        "end": 2020
+      },
+      "opini_auditor": "Unqualified opinion with no exceptions.",
+      "criteria": ["Memenuhi"],
+      "tanggal": "{{current_date}}",
+      "sector": "Information Technology",
+      "group": "Software & Services",
+      "industri": "Information Technology & IT Services"
+    },
+    {
+      "tahun_beroperasi": 2010,
+      "didirikan_untuk": "Startup focused on cloud computing services.",
+      "periode": {
+        "start": 2012,
+        "end": 2024
+      },
+      "opini_auditor": "Qualified opinion due to minor discrepancies.",
+      "criteria": ["Tidak Memenuhi"],
+      "tanggal": "{{current_date}}",
+      "sector": "Information Technology",
+      "group": "Software & Services",
+      "industri": "Information Technology & IT Services"
+    },
+    {
+      "tahun_beroperasi": 1988,
+      "didirikan_untuk": "Legacy system integration services.",
+      "periode": {
+        "start": 1990,
+        "end": 2005
+      },
+      "opini_auditor": "Disclaimer of opinion.",
+      "criteria": ["Tidak Memenuhi"],
+      "tanggal": "{{current_date}}",
+      "sector": "Information Technology",
+      "group": "Software & Services",
+      "industri": "Information Technology & IT Services"
+    },
+    {
+      "tahun_beroperasi": 2020,
+      "didirikan_untuk": "AI-based analytics platform.",
+      "periode": {
+        "start": 2021,
+        "end": 2025
+      },
+      "opini_auditor": "Clean audit report.",
+      "criteria": ["Memenuhi"],
+      "tanggal": "{{current_date}}",
+      "sector": "Information Technology",
+      "group": "Software & Services",
+      "industri": "Information Technology & IT Services"
+    }
+  ]

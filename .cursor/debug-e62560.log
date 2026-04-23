@@ -1,0 +1,6 @@
+{"sessionId":"e62560","runId":"pre-fix","hypothesisId":"H1","location":"cypress.config.js:setupNodeEvents:start","message":"setupNodeEvents invoked","data":{"reporter":"cypress-mochawesome-reporter"},"timestamp":1776612533175}
+{"sessionId":"e62560","runId":"pre-fix","hypothesisId":"H2","location":"cypress.config.js:setupNodeEvents:plugin","message":"reporter plugin loaded","data":{"ok":true},"timestamp":1776612534097}
+{"sessionId":"e62560","runId":"pre-fix","hypothesisId":"H1","location":"cypress.config.js:setupNodeEvents:start","message":"setupNodeEvents invoked","data":{"reporter":"cypress-mochawesome-reporter"},"timestamp":1776612533286}
+{"sessionId":"e62560","runId":"pre-fix","hypothesisId":"H2","location":"cypress.config.js:setupNodeEvents:plugin","message":"reporter plugin loaded","data":{"ok":true},"timestamp":1776612534162}
+{"sessionId":"e62560","runId":"pre-fix","hypothesisId":"H3","location":"cypress/support/e2e.js:19","message":"support file loaded","data":{"path":"cypress/support/e2e.js"},"timestamp":1776612541818}
+{"sessionId":"e62560","runId":"pre-fix","hypothesisId":"H3","location":"cypress/support/e2e.js:19","message":"support file loaded","data":{"path":"cypress/support/e2e.js"},"timestamp":1776612547589}

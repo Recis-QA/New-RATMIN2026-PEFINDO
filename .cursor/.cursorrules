@@ -1,0 +1,39 @@
+# RULES AUTOMATION RATMIN 2026
+
+Anda adalah seorang QA Automation Engineer ahli. Tujuan utama proyek ini adalah **Produksi Data**: mengisi dan mengirimkan data (submit) melalui aplikasi web Ratmin secara efisien.
+
+## 🏗️ ARSITEKTUR PROYEK
+Patuhi struktur folder dan pola yang sudah ada secara ketat:
+- `cypress/e2e/`: Skenario pengujian (logika untuk looping dan pemrosesan data).
+- `cypress/pages/`: Class Page Object (tempat menyimpan selector dan action/fungsi).
+- `cypress/fixtures/`: Data uji dalam format JSON.
+- `cypress/support/commands/`: Custom commands global (terutama untuk autentikasi/login).
+
+## 🛠️ STANDAR CODING (POM)
+- **Berbasis Class:** Setiap file di folder `pages` harus berupa ES6 Class yang di-export sebagai instance baru (contoh: `export default new PBK_Page();`).
+- **Action Dinamis:** Buat method yang menangani interaksi secara efisien (contoh: `fillAllRadioButtons(choice)`).
+- **Selector Minimalis:** Gunakan `get` untuk elemen statis dan *method* untuk elemen dinamis (seperti ID yang mengandung index atau nomor baris).
+
+## 🧪 ALUR PRODUKSI DATA (E2E)
+- **Eksekusi Cepat:** Karena tujuannya adalah memproduksi data, hindari penggunaan Assertion (validasi) yang berlebihan atau redundan.
+- **Siklus Utama:** Fokus hanya pada: **[Navigasi ke Menu] -> [Pilih Data/Edit] -> [Update] -> [Submit] -> [Konfirmasi/Confirm]**.
+- **Auth Session:** Gunakan `cy.session()` di dalam `beforeEach` dengan mengambil data dari `auth.json` agar tidak perlu login berulang kali di setiap test.
+- **Iterasi/Looping:** Gunakan `.forEach()` dari file fixture untuk memproses banyak data dalam satu kali jalan.
+- **Navigasi Minimalis:** Gunakan assertion minimal hanya untuk memastikan halaman sudah terbuka (contoh: `cy.url().should('include', ...)` atau `be.visible`) sebelum lanjut ke aksi berikutnya.
+
+## 🔄 LOGIKA BATCH PROCESSING
+- **Looping:** Lakukan iterasi pada array di dalam fixture.
+- **Urutan:** Setelah menjalankan `clickConfirmSubmit()`, segera navigasi kembali ke menu atau daftar (list) untuk memulai data berikutnya.
+- **Jangan "Over-Testing":** Tidak perlu mengecek setiap field setelah diisi. Cukup pastikan proses submit berhasil lanjut ke tahap berikutnya.
+
+## 🚫 BATASAN (RESTRICTIONS)
+- **Tanpa Allure:** Jangan sertakan konfigurasi, decorator, atau perintah Allure Reporting sama sekali.
+- **Tanpa Assertion Berat:** Hindari mengecek elemen UI yang tidak menghalangi alur (seperti warna, jenis font, atau label yang tidak kritikal).
+- **Kode Minimalis:** Pastikan script tetap bersih, ramping, dan fokus pada jalur "Update > Submit > Navigasi".
+
+## 💡 CONTOH PROMPT UNTUK MODUL BARU
+"Buat script produksi data untuk [Nama Modul]. 
+1. Gunakan flow login session.
+2. Gunakan NavigasiMenu untuk ke menu [Nama Menu].
+3. Lakukan looping pada fixture, isi form, klik Update, lalu Submit, dan tangani pop-up konfirmasi. 
+4. Buat assertion seminimal mungkin, cukup pastikan kita berada di halaman yang benar."

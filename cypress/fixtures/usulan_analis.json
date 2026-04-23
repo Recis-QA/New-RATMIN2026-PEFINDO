@@ -1,0 +1,36 @@
+[
+  {
+    "row": 0,
+    "sector": "Information Technology",
+    "group": "Software & Services",
+    "industri": "Information Technology & IT Services",
+    "ksf": "Stabilitas arus kas dan dukungan sponsor",
+    "icgp": "ICGP-ENERGI-01",
+    "modelBisnis": "Bisnis Model 1",
+    "kompleksitas": "Medium",
+    "kategoriGroup": "Kategori Group 1",
+    "peers": "PGEO, PTPP, WIKA",
+    "leadAnalyst": "QA Aditya",
+    "supportAnalyst1": "QA Aditya",
+    "supportAnalyst2": "QA Aditya",
+    "asistenAnalis": "QA Aditya",
+    "pic": "QA Aditya"
+  },
+  {
+    "row": 0,
+    "sector": "Information Technology",
+    "group": "Software & Services",
+    "industri": "Information Technology & IT Services",
+    "ksf": "Kapasitas pembayaran dan profil pendapatan",
+    "icgp": "ICGP-TRANS-02",
+    "modelBisnis": "Bisnis Model 1",
+    "kompleksitas": "Low",
+    "kategoriGroup": "Kategori Group 1",
+    "peers": "GIAA, CMNP, JSMR",
+    "leadAnalyst": "QA Aditya",
+    "supportAnalyst1": "QA Aditya",
+    "supportAnalyst2": "QA Aditya",
+    "asistenAnalis": "QA Aditya",
+    "pic": "QA Aditya"
+  }
+]

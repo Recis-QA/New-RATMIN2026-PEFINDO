@@ -13,7 +13,7 @@
   "author": "Aditya Pratama",
   "license": "ISC",
   "devDependencies": {
-    "cypress": "^13.6.0",
+    "cypress": "^15.13.1",
     "cypress-mochawesome-reporter": "^3.8.2",
     "cypress-wait-until": "^3.0.2",
     "fs-extra": "^11.2.0",

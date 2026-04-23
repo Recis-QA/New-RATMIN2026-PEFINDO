@@ -17,8 +17,7 @@ class DashboardPage {
       const count = text.split('-')[1].trim();
       return parseInt(count);
     });
-  }
-
+    }
 }
 
 export default new DashboardPage()
