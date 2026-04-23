@@ -1,4 +1,3 @@
-import LoginPage from '../../pages/Authentication/LoginPage';
 import NavigasiMenu from '../../pages/NavigasiMenu';
 import ListMandatePage from '../../pages/New Mandate/ListMandatePage';
 import FormMandatePage from '../../pages/New Mandate/FormMandatePage';
@@ -6,27 +5,11 @@ import FormMandatePage from '../../pages/New Mandate/FormMandatePage';
 describe('Pembuatan Surat Mandate Baru', () => {
     
     // 1. Load Data dari Fixture (Array)
-    const dataList = require('../../fixtures/mandate.json');
+    const dataList = require('../../../fixtures/mandate.json');
 
     beforeEach(() => {
-        // Mengambil data auth untuk login session
-        cy.fixture('auth').then((auth) => {
-            const user = auth.validUser;
-            
-            // Session supaya tidak perlu login berulang kali di setiap client
-            cy.session([user.email, user.password], () => {
-                LoginPage.visit();
-                LoginPage.fillEmail(user.email);
-                LoginPage.clickNext();
-                LoginPage.fillPassword(user.password);
-                LoginPage.signIn();
-                cy.url().should('include', '/dashboard');
-            });
-        });
-        
-        // Selalu mulai dari Dashboard
+        cy.loginSession();
         cy.visit('/dashboard');
-        // Bersihkan state form SPA agar iterasi berikutnya selalu mulai dari Step 1
         cy.clearLocalStorage();
     });
 
@@ -34,7 +17,7 @@ describe('Pembuatan Surat Mandate Baru', () => {
     it('Input Semua Surat Mandate', function () {
 
         // --- STEP 1: Navigasi ke menu New Mandate sekali di awal ---
-        NavigasiMenu.selectNewMandateMenu();
+        cy.visit(/mandate/list);
 
         dataList.forEach((data, index) => {
             cy.log(`Memproses client ke-${index + 1}: ${data.client}`);

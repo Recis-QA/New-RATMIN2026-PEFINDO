@@ -1,23 +1,10 @@
-import LoginPage from '../../pages/Authentication/LoginPage';
 import Navigasi from '../../pages/NavigasiMenu';
 import ListUsulanAnalis from '../../pages/Usulan_Analis/list_usulan_analis_Page';
 import UsulanAnalisForm from '../../pages/Usulan_Analis/Usulan_Analis_Page';
 
 describe('Usulan Analis - Produksi Data', () => {
   beforeEach(() => {
-    cy.fixture('auth').then((auth) => {
-      const user = auth.validUser;
-
-      cy.session([user.email, user.password], () => {
-        LoginPage.visit();
-        LoginPage.fillEmail(user.email);
-        LoginPage.clickNext();
-        LoginPage.fillPassword(user.password);
-        LoginPage.signIn();
-        cy.url().should('include', '/dashboard');
-      });
-    });
-
+    cy.loginSession();
     cy.visit('/dashboard');
   });
 
