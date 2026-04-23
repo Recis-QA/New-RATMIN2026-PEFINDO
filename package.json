@@ -1,0 +1,28 @@
+{
+  "name": "prj-pef-ratmin2026",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "cy:open": "cypress open",
+    "test": "cypress run",
+    "test:spec": "cypress run --spec",
+    "report:pdf": "node generate-pdf.js"
+  },
+  "keywords": [],
+  "author": "Aditya Pratama",
+  "license": "ISC",
+  "devDependencies": {
+    "cypress": "^13.6.0",
+    "cypress-mochawesome-reporter": "^3.8.2",
+    "cypress-wait-until": "^3.0.2",
+    "fs-extra": "^11.2.0",
+    "mocha": "^10.4.0",
+    "mochawesome": "^7.1.4",
+    "mochawesome-report-generator": "^6.3.2",
+    "puppeteer": "^22.15.0"
+  },
+  "dependencies": {
+    "chai": "^4.3.10"
+  }
+}
