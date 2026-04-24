@@ -1,0 +1,122 @@
+[
+  {
+    "row": 0,
+    "ticker": "PGEO",
+    "namaPerusahaan": "PT Pertamina Geothermal Energy Tbk",
+    "jenisPemeringkatan": "Pemeringkatan Baru",
+    "instrumenPemeringkatan": "Municipal Bond",
+    "dataHistorical": {
+      "sudahDidapatkan": true,
+      "tanggalPenerimaan": "2026-04-23",
+      "catatan": "Data historical lengkap sudah diterima dari klien."
+    },
+    "dataPublication": {
+      "sudahDidapatkan": true,
+      "catatan": "Data publikasi tersedia di website resmi klien."
+    },
+    "dataProjection": {
+      "sudahDidapatkan": true,
+      "catatan": "Data proyeksi 5 tahun sudah diterima."
+    },
+    "standardQuestionnaire": {
+      "sudahDidapatkan": true,
+      "catatan": "Standard questionnaire sudah dijawab lengkap."
+    },
+    "uraianRingkasPerusahaan": {
+      "uraian": "Perusahaan bergerak di bidang energi panas bumi dengan operasi utama di beberapa wilayah Indonesia."
+    },
+    "informasiKelengkapanData": {
+      "catatan": "Seluruh data pendukung telah lengkap dan siap direview."
+    }
+  },
+  {
+    "row": 1,
+    "ticker": "BBSI",
+    "namaPerusahaan": "PT. Krom Bank Indonesia",
+    "jenisPemeringkatan": "Pemeringkatan Baru",
+    "instrumenPemeringkatan": "Municipal Bond",
+    "dataHistorical": {
+      "sudahDidapatkan": true,
+      "tanggalPenerimaan": "2026-04-22",
+      "catatan": "Data historical 3 tahun terakhir sudah lengkap."
+    },
+    "dataPublication": {
+      "sudahDidapatkan": true,
+      "catatan": "Laporan tahunan dan keuangan sudah dipublikasi."
+    },
+    "dataProjection": {
+      "sudahDidapatkan": true,
+      "catatan": "Proyeksi keuangan sudah diverifikasi."
+    },
+    "standardQuestionnaire": {
+      "sudahDidapatkan": true,
+      "catatan": "Questionnaire terisi lengkap."
+    },
+    "uraianRingkasPerusahaan": {
+      "uraian": "Bank digital dengan fokus pada layanan perbankan ritel dan UKM."
+    },
+    "informasiKelengkapanData": {
+      "catatan": "Data lengkap, tidak ada kekurangan."
+    }
+  },
+  {
+    "row": 2,
+    "ticker": "WIKA",
+    "namaPerusahaan": "PT Wijaya Karya Tbk",
+    "jenisPemeringkatan": "Pemeringkatan Baru",
+    "instrumenPemeringkatan": "Commercial Paper",
+    "dataHistorical": {
+      "sudahDidapatkan": true,
+      "tanggalPenerimaan": "2026-04-21",
+      "catatan": "Data historical proyek konstruksi sudah lengkap."
+    },
+    "dataPublication": {
+      "sudahDidapatkan": true,
+      "catatan": "Publikasi laporan tahunan tersedia."
+    },
+    "dataProjection": {
+      "sudahDidapatkan": true,
+      "catatan": "Proyeksi arus kas dan laba rugi sudah dikirim."
+    },
+    "standardQuestionnaire": {
+      "sudahDidapatkan": true,
+      "catatan": "Semua pertanyaan standard sudah dijawab."
+    },
+    "uraianRingkasPerusahaan": {
+      "uraian": "Perusahaan konstruksi BUMN dengan portofolio proyek infrastruktur nasional."
+    },
+    "informasiKelengkapanData": {
+      "catatan": "Data kelengkapan siap untuk proses pemeringkatan."
+    }
+  },
+  {
+    "row": 3,
+    "ticker": "TLKM",
+    "namaPerusahaan": "PT Telkom Indonesia Tbk",
+    "jenisPemeringkatan": "Pemeringkatan Baru",
+    "instrumenPemeringkatan": "Perpetual Note",
+    "dataHistorical": {
+      "sudahDidapatkan": true,
+      "tanggalPenerimaan": "2026-04-20",
+      "catatan": "Data historical operasional telekomunikasi sudah lengkap."
+    },
+    "dataPublication": {
+      "sudahDidapatkan": true,
+      "catatan": "Data publikasi Telkom tersedia di IDX."
+    },
+    "dataProjection": {
+      "sudahDidapatkan": true,
+      "catatan": "Proyeksi bisnis 5 tahun ke depan sudah disubmit."
+    },
+    "standardQuestionnaire": {
+      "sudahDidapatkan": true,
+      "catatan": "Standard questionnaire lengkap."
+    },
+    "uraianRingkasPerusahaan": {
+      "uraian": "Perusahaan telekomunikasi BUMN terbesar di Indonesia dengan layanan seluler, fixed-line, dan data."
+    },
+    "informasiKelengkapanData": {
+      "catatan": "Seluruh dokumen pendukung sudah lengkap."
+    }
+  }
+]
