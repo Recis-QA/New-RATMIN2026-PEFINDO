@@ -1,4 +1,3 @@
-import LoginPage from '../../pages/Authentication/LoginPage';
 import Navigasi from '../../pages/NavigasiMenu';
 import ListAssignmentVoter from '../../pages/Assignment_Voter/list_assignment_voter';
 import AssignmentVoterPage from '../../pages/Assignment_Voter/assignment_voter_page';
@@ -6,20 +5,7 @@ import AssignmentVoterPage from '../../pages/Assignment_Voter/assignment_voter_p
 describe('Assignment Voter', () => {
 
     beforeEach(() => {
-        cy.fixture('auth').then((auth) => {
-            const user = auth.validUser;
-
-            cy.session([user.email, user.password], () => {
-                LoginPage.visit();
-                LoginPage.fillEmail(user.email);
-                LoginPage.clickNext();
-                LoginPage.fillPassword(user.password);
-                LoginPage.signIn();
-
-                cy.url().should('include', '/dashboard');
-            });
-        });
-
+        cy.loginSession();
         cy.visit('/dashboard');
     });
 

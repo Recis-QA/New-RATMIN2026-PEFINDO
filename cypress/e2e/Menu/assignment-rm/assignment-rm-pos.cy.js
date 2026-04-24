@@ -1,29 +1,11 @@
-import LoginPage from '../../pages/Authentication/LoginPage';
 import Navigasi from '../../pages/NavigasiMenu';
 import ListRM from '../../pages/Assignment RM/ListRM';
 import RM_Page from '../../pages/Assignment RM/RM_Page';
 
 describe('Assignment RM', () => {
 
-     beforeEach(() => {
-        // 1. Mengambil data auth untuk login session
-        cy.fixture('auth').then((auth) => {
-            const user = auth.validUser;
-            
-            // Session supaya tidak perlu login berulang kali
-            cy.session([user.email, user.password], () => {
-                LoginPage.visit();
-                LoginPage.fillEmail(user.email);
-                LoginPage.clickNext();
-                LoginPage.fillPassword(user.password);
-                LoginPage.signIn();
-                
-                // Pastikan login berhasil sebelum session disimpan
-                cy.url().should('include', '/dashboard');
-            });
-        });
-        
-        // 2. Selalu mulai dari Dashboard setelah session dipulihkan
+    beforeEach(() => {
+        cy.loginSession();
         cy.visit('/dashboard');
     });
 

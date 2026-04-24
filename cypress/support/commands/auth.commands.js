@@ -1,3 +1,20 @@
+import LoginPage from '../pages/Authentication/LoginPage';
+
+// Login dengan cy.session agar tidak login ulang setiap test
+Cypress.Commands.add('loginSession', () => {
+    cy.fixture('auth').then((auth) => {
+        const user = auth.validUser;
+        cy.session([user.email, user.password], () => {
+            LoginPage.visit();
+            LoginPage.fillEmail(user.email);
+            LoginPage.clickNext();
+            LoginPage.fillPassword(user.password);
+            LoginPage.signIn();
+            cy.url().should('include', '/dashboard');
+        });
+    });
+});
+
 //Logout Session Command
 Cypress.Commands.add('logout', () => {
   // Buka profile menu

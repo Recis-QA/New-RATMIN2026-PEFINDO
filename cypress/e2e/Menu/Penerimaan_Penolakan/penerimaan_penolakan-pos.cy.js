@@ -1,23 +1,10 @@
-import LoginPage from '../../pages/Authentication/LoginPage';
 import Navigasi from '../../pages/NavigasiMenu';
 import ListPP from '../../pages/Penerimaan_Penolakan/ListPenerimaanPenolakan_Page';
 import FormPP from '../../pages/Penerimaan_Penolakan/PenerimaanPenolakan_Page';
 
 describe('Penerimaan Penolakan — produksi data', () => {
   beforeEach(() => {
-    cy.fixture('auth').then((auth) => {
-      const user = auth.validUser;
-
-      cy.session([user.email, user.password], () => {
-        LoginPage.visit();
-        LoginPage.fillEmail(user.email);
-        LoginPage.clickNext();
-        LoginPage.fillPassword(user.password);
-        LoginPage.signIn();
-        cy.url().should('include', '/dashboard');
-      });
-    });
-
+    cy.loginSession();
     cy.visit('/dashboard');
   });
 
