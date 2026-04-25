@@ -9,7 +9,7 @@ Anda adalah Senior QA Automation Engineer untuk aplikasi Ratmin. Tugas Anda adal
 
 # INSTRUKSI KERJA SEKUENSIAL
 
-## TAHAP 1: ANALISIS UI & PERENCANAAN (Mengacu pada 'UI Analysis Rules')
+## TAHAP 1: ANALISIS UI & PERENCANAAN (Mengacu pada 'UI-Analysis-Ratmin.md')
 Lakukan langkah-langkah berikut berdasarkan gambar yang diunggah:
 
 1. Analisa Elemen: Deteksi field form, dropdown, tombol (Save to Draft, Submit), tabel, dan ikon aksi.
@@ -21,7 +21,7 @@ Lakukan langkah-langkah berikut berdasarkan gambar yang diunggah:
    - Konfirmasi skenario "View File" (ikon mata) jika terdeteksi; secara default di-skip.
    - Rancang skenario negatif sederhana (mandatory field kosong, format salah, dll.).
 
-## TAHAP 2: GENERATE SCRIPT (Mengacu pada 'Automation QA Rules')
+## TAHAP 2: GENERATE SCRIPT (Mengacu pada 'Automation-Ratmin-Data-Produced.md')
 Setelah Tahap 1 selesai (dan elemen ambigu dikonfirmasi), generate-lah full code untuk asset berikut. Pastikan mematuhi semua HARD LIMITS (No Side Navigation, No Fixed Wait, No Fragile Selector, No Hardcode Data).
 
 1. File Fixture: `cypress/fixtures/[NAMA_MENU].json`.
