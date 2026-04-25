@@ -15,5 +15,14 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands/auth.commands'
-import './commands';
+import './commands/commands';
 import 'cypress-mochawesome-reporter/register';
+
+// Abaikan React Hydration Error (#418) yang berasal dari aplikasi (bukan error Cypress/test).
+// Error ini muncul saat React client-side render tidak cocok dengan server-side HTML,
+// umumnya terjadi pada halaman login pertama kali dikunjungi dalam sesi baru.
+Cypress.on('uncaught:exception', (err) => {
+  if (err.message.includes('Minified React error') || err.message.includes('#418')) {
+    return false;
+  }
+});

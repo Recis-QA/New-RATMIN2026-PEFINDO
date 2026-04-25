@@ -1,4 +1,4 @@
-import LoginPage from '../pages/Authentication/LoginPage';
+import LoginPage from '../pages/authentication/LoginPage';
 
 // Login dengan cy.session agar tidak login ulang setiap test
 Cypress.Commands.add('loginSession', () => {
@@ -13,6 +13,24 @@ Cypress.Commands.add('loginSession', () => {
             cy.url().should('include', '/dashboard');
         });
     });
+});
+
+Cypress.Commands.add('loginByRole', (role) => {
+  cy.fixture('auth').then((users) => {
+    const userData = users[role];
+
+    // Hentikan eksekusi lebih awal jika role tidak ditemukan di auth.json
+    expect(userData, `Data login untuk role "${role}" tidak ditemukan di auth.json!`).to.not.be.undefined;
+
+    cy.session(`session-${role}`, () => {
+      LoginPage.visit();
+      LoginPage.fillEmail(userData.email);
+      LoginPage.clickNext();
+      LoginPage.fillPassword(userData.password);
+      LoginPage.signIn();
+      cy.url().should('include', '/dashboard');
+    });
+  });
 });
 
 //Logout Session Command

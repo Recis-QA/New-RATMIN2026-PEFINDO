@@ -1,0 +1,19 @@
+[
+  {
+    "dokumenPendukung": "Reply Letter",
+    "tipeSiteVisit": "Kunjungan",
+    "tempatSiteVisit": "Gedung Kantor Pusat, Jakarta Selatan",
+    "tanggalMulaiVisit": "2026-05-05",
+    "tanggalSelesaiVisit": "2026-05-06",
+    "tipeManagementMeeting": "Inisiasi Meeting",
+    "tanggalManagementMeeting": "2026-05-07",
+    "tempatManagementMeeting": "Ruang Rapat Lantai 3, Jakarta",
+    "userReviewer": "QA Fariz Faizal",
+    "userApprover": "QA Fariz Faizal",
+    "dependencyProses": "WF-ANTM-001",
+    "deadline": "2026-05-10",
+    "reminder": "2026-05-08",
+    "namaPerusahaanExpected": "PT Aneka Tambang Tbk",
+    "tickerExpected": "ANTM"
+  }
+]
