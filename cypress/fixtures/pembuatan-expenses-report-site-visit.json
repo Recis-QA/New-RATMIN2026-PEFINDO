@@ -1,0 +1,17 @@
+{
+  "ticker": "BUMI",
+  "namaPerusahaan": "PT Bumi Resources Tbk",
+  "startPeriodeCoverage": "2026-05-01",
+  "endPeriodeCoverage": "2026-05-31",
+  "expenseDistribution": "Cash",
+  "activity": {
+    "activityName": "Site Visit PT Bumi Resources Tbk Triwulan II",
+    "categoryActivity": "Visit",
+    "expensePerActivity": "5000000"
+  },
+  "userReviewer": "QA Aditya",
+  "userApprover": "QA Aditya",
+  "dependencyProses": "Proses pemeringkatan reguler Triwulan II 2026",
+  "deadline": "2026-05-31",
+  "reminder": "2026-05-28"
+}
