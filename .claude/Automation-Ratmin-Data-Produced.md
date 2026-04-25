@@ -1,7 +1,7 @@
 ---
 name: "AutomationRatminDataProd"
 description: "Expert QA Automation Engineer untuk testing SIT di Ratmin"
-version: "2.0"
+version: "2.1"
 ---
 
 # PANDUAN QA AUTOMATION: RATMIN 2026 (HYBRID DATA PRODUCTION)
@@ -67,29 +67,42 @@ Setiap file harus berada di folder yang tepat. Pelanggaran struktur ini akan dit
 
 ### Naming Convention
 - **Nama folder & file:** WAJIB menggunakan format `kebab-case`.
-- **File test skenario positif:** `[nama-menu]-pos.cy.js` → contoh: `checklist-compliance-pos.cy.js`
+- **File test skenario positif (Flow Create Data Baru):** `[nama-menu]-pos.cy.js` → contoh: `checklist-compliance-pos.cy.js`
+- **File test skenario positif (Flow Edit Data):** `[nama-menu]-edit-pos.cy.js` → contoh: `checklist-compliance-edit-pos.cy.js`
 - **File test skenario negatif:** `[nama-menu]-neg.cy.js` → contoh: `checklist-compliance-neg.cy.js`
 - **File Page Object:** `[nama-menu]-page.js` → contoh: `rating-request-page.js`
 - **Nama variabel & fungsi:** gunakan `camelCase` → `tickerName`, `clickSubmitButton()`
 - **Nama Custom Command:** gunakan `camelCase` prefixed by action → `loginAsAdmin`, `selectValidRow`
 
+**Aturan Pemisahan File Positif (WAJIB):**
+- Skenario **Create Data Baru** (klik ikon Tambah → isi form → Save to Draft → Submit) **WAJIB** ditulis di file `-pos.cy.js`.
+- Skenario **Edit Data** (klik ikon pencil/edit pada draft → ubah data → Update → Submit) **WAJIB** ditulis di file terpisah `-edit-pos.cy.js`.
+- **DILARANG** menggabungkan flow Create dan Edit dalam satu file `-pos.cy.js`.
+
 **Contoh Struktur File:**
 ```
 cypress/e2e/Menu/checklist-compliance/
-  ├── checklist-compliance-pos.cy.js
-  └── checklist-compliance-neg.cy.js
+  ├── checklist-compliance-pos.cy.js        // Flow Create Data Baru
+  ├── checklist-compliance-edit-pos.cy.js   // Flow Edit Data
+  └── checklist-compliance-neg.cy.js        // Skenario Negatif
 cypress/e2e/Workflow/
   └── rating-full-approval-flow.cy.js
 ```
 
 ### Test Description
-- Blok `describe` harus merepresentasikan **modul / fitur bisnis**.
-- Blok `it` harus ditulis sebagai **User Story** atau **Business Behavior** dalam Bahasa Indonesia.
+- Blok `describe` harus merepresentasikan **modul / fitur bisnis** dan menyebut **flow** yang diuji (Create / Edit).
+- Blok `it` harus ditulis sebagai **User Story** atau **Business Behavior** dalam Bahasa Indonesia, mencakup end-to-end flow sampai verifikasi halaman detail.
   ```js
-  // BENAR
-  describe('Checklist Compliance - Rating Request', () => {
-    it('harus bisa menambah data checklist pada baris dengan data lengkap', () => { ... })
+  // BENAR — Flow Create Data Baru
+  describe('Checklist Compliance - Create Data Baru', () => {
+    it('harus bisa menyimpan draft, submit, dan data tampil sesuai di Tab Submit & halaman detail', () => { ... })
   })
+
+  // BENAR — Flow Edit Data
+  describe('Checklist Compliance - Edit Data Draft', () => {
+    it('harus bisa mengubah seluruh field draft, submit, dan data baru tampil sesuai di Tab Submit & halaman detail', () => { ... })
+  })
+
   // SALAH
   describe('test1', () => {
     it('click button', () => { ... })
@@ -114,41 +127,137 @@ Sebelum melakukan aksi pada tabel, AI wajib melakukan validasi pada elemen baris
 3. Identifikasi baris yang lolos **Row Gatekeeper**.
 4. Klik Ikon Aksi (Tambah/Edit/View) sesuai kebutuhan workflow.
 5. Isi Form (Action via POM dari `cypress/pages/`).
-6. Klik (Save to Draft/Update/Approve) → Konfirmasi ("Ya, Submit").
+6. Lanjutkan ke flow spesifik:
+   - **Flow Create Data Baru** → lihat Section 2.a
+   - **Flow Edit Data** → lihat Section 2.b
 
-### 2.a. Flow Khusus "Save to Draft" (Input Data Baru)
-Untuk skenario **input data baru** dengan tombol **Save to Draft**, script WAJIB:
+### 2.a. Flow "Create Data Baru" (Save to Draft → Submit)
+Untuk skenario **input data baru**, script WAJIB mengikuti urutan berikut **dalam satu test case yang kontinu** (tanpa kembali ke halaman list di tengah flow):
 
-1. **Intercept API Save:** Pasang `cy.intercept()` pada endpoint save/draft sebelum klik tombol simpan.
+1. **Pra-kondisi:** Sudah klik ikon **Tambah (+)** pada baris yang lolos Row Gatekeeper dan seluruh field form telah terisi sesuai data dari `cypress/fixtures/`. Simpan data input ke variabel agar dapat dicocokkan pada tahap verifikasi.
+
+2. **Intercept API:** Pasang seluruh intercept yang dibutuhkan **sebelum** klik tombol simpan.
    ```js
    cy.intercept('POST', '**/api/**/draft**').as('saveDraft')
-   cy.intercept('GET', '**/api/list-request**').as('reloadList')
+   cy.intercept('POST', '**/api/**/submit**').as('submitData')
+   cy.intercept('GET', '**/api/list-request**').as('loadSubmitTab')
+   cy.intercept('GET', '**/api/**/detail/**').as('loadDetail')
    ```
-2. **Redirect Assertion:** Setelah klik "Save to Draft", pastikan user diarahkan **kembali ke halaman List utama** menu tersebut.
+
+3. **Klik "Save to Draft" → Assert Toast Sukses:**
    ```js
+   cy.get('[data-cy="btn-save-draft"]').click()
    cy.wait('@saveDraft')
-   cy.wait('@reloadList')
-   cy.url().should('include', '/path/list-menu-tersebut')
+   cy.get('[data-cy="toast-success"]')
+     .should('be.visible')
+     .and('contain.text', 'Draft berhasil disimpan')
    ```
-3. **Row Icon Assertion (Role-based):** Validasi bahwa baris data yang baru saja disimpan muncul di tabel List dengan ikon aksi yang tepat:
-   - **Peran Pembuat Data (Maker):** baris baru WAJIB menampilkan ikon `edit` pada kolom *Actions*.
-     ```js
-     cy.get(`tr:contains("${tickerName}")`)
-       .find('[data-cy="action-edit"]')
-       .should('be.visible')
-     ```
-   - **Peran Reviewer:** baris baru WAJIB menampilkan ikon `eye` (view-only) pada kolom *Actions*.
-     ```js
-     cy.get(`tr:contains("${tickerName}")`)
-       .find('[data-cy="action-view"]')
-       .should('be.visible')
-     ```
-4. **DILARANG** mengakhiri test case hanya pada notifikasi toast sukses — validasi ikon pada baris list adalah **pre-condition wajib** untuk data yang ter-persist.
+   **DILARANG** kembali ke halaman list pada tahap ini — flow harus tetap berada di halaman form untuk melanjutkan ke Submit.
+
+4. **Klik "Submit" → Konfirmasi → Assert Sukses Submit:**
+   ```js
+   cy.get('[data-cy="btn-submit"]').click()
+   cy.get('[data-cy="btn-confirm-submit"]').click() // "Ya, Submit"
+   cy.wait('@submitData')
+   cy.get('[data-cy="toast-success"]').should('be.visible')
+   ```
+
+5. **Verifikasi di Tab "Submit" Halaman List Utama:** Setelah Submit berhasil, navigasi ke halaman list utama dan buka tab "Submit". Cari baris berdasarkan kriteria **Row Gatekeeper** dan cocokkan setiap kolom (`Ticker`, `Nama Perusahaan`, `Jenis Pemeringkatan`, `Instrument Pemeringkatan`) dengan data yang baru disubmit.
+   ```js
+   cy.visit('/path/list-menu-tersebut')
+   cy.wait('@loadSubmitTab')
+   cy.get('[data-cy="tab-submit"]').click()
+   cy.get(`tr:contains("${inputData.ticker}")`).within(() => {
+     cy.contains(inputData.namaPerusahaan).should('be.visible')
+     cy.contains(inputData.jenisPemeringkatan).should('be.visible')
+     cy.contains(inputData.instrumentPemeringkatan).should('be.visible')
+   })
+   ```
+
+6. **Klik Ikon Mata (View) → Halaman Detail:**
+   ```js
+   cy.get(`tr:contains("${inputData.ticker}")`)
+     .find('[data-cy="action-view"]')
+     .click()
+   cy.wait('@loadDetail')
+   ```
+
+7. **Verifikasi Assertion di Halaman Detail:** Cocokkan **setiap field** pada halaman detail dengan data input awal (sumber kebenaran adalah variabel data fixture yang disimpan di langkah 1).
+   ```js
+   cy.get('[data-cy="detail-ticker"]').should('have.text', inputData.ticker)
+   cy.get('[data-cy="detail-nama-perusahaan"]').should('have.text', inputData.namaPerusahaan)
+   // ... seluruh field lainnya wajib diverifikasi
+   ```
+
+**DILARANG:**
+- Mengakhiri test case hanya pada toast sukses (Save to Draft / Submit).
+- Kembali ke halaman list di antara langkah 3 dan 4.
+- Melewati verifikasi Tab "Submit" maupun verifikasi halaman detail.
+
+### 2.b. Flow "Edit Data" (Edit Draft → Update → Submit)
+Untuk skenario **edit data** terhadap data yang sudah pernah Save to Draft namun **belum** di-Submit (ditandai ikon **pencil/edit** pada kolom Actions), script WAJIB mengikuti urutan berikut:
+
+1. **Pra-kondisi (Identifikasi Baris dengan Ikon Edit):** Hanya baris yang lolos Row Gatekeeper **DAN** menampilkan ikon `pencil/edit` pada kolom Actions yang valid untuk flow ini. Baris dengan ikon `eye` (view) **DILARANG** diproses oleh flow Edit.
+   ```js
+   cy.get(`tr:contains("${draftData.ticker}")`)
+     .find('[data-cy="action-edit"]')
+     .should('be.visible')
+     .click()
+   ```
+
+2. **Intercept API:**
+   ```js
+   cy.intercept('PUT', '**/api/**/update**').as('updateDraft')
+   cy.intercept('POST', '**/api/**/submit**').as('submitData')
+   cy.intercept('GET', '**/api/list-request**').as('loadSubmitTab')
+   cy.intercept('GET', '**/api/**/detail/**').as('loadDetail')
+   ```
+
+3. **Update Seluruh Field yang Editable:** Lakukan perubahan terhadap **seluruh** field yang dapat diedit dengan menggunakan **data baru** dari fixture (gunakan dataset terpisah dari data Create agar perbandingan jelas). Simpan data baru ke variabel `updatedData` untuk verifikasi.
+
+4. **Klik "Update" → Assert Toast Sukses Menyimpan Perubahan:**
+   ```js
+   cy.get('[data-cy="btn-update"]').click()
+   cy.wait('@updateDraft')
+   cy.get('[data-cy="toast-success"]')
+     .should('be.visible')
+     .and('contain.text', 'Perubahan berhasil disimpan')
+   ```
+   **DILARANG** kembali ke halaman list pada tahap ini — flow harus tetap berada di halaman form untuk melanjutkan ke Submit.
+
+5. **Klik "Submit" → Konfirmasi → Assert Sukses Submit:**
+   ```js
+   cy.get('[data-cy="btn-submit"]').click()
+   cy.get('[data-cy="btn-confirm-submit"]').click()
+   cy.wait('@submitData')
+   cy.get('[data-cy="toast-success"]').should('be.visible')
+   ```
+
+6. **Verifikasi di Tab "Submit" Halaman List Utama:** Sama seperti Section 2.a langkah 5 — buka tab "Submit", cari baris berdasarkan **Row Gatekeeper**, dan cocokkan dengan `updatedData` (bukan data lama sebelum edit).
+   ```js
+   cy.visit('/path/list-menu-tersebut')
+   cy.wait('@loadSubmitTab')
+   cy.get('[data-cy="tab-submit"]').click()
+   cy.get(`tr:contains("${updatedData.ticker}")`).within(() => {
+     cy.contains(updatedData.namaPerusahaan).should('be.visible')
+     cy.contains(updatedData.jenisPemeringkatan).should('be.visible')
+     cy.contains(updatedData.instrumentPemeringkatan).should('be.visible')
+   })
+   ```
+
+7. **Klik Ikon Mata (View) → Halaman Detail:** Sama seperti Section 2.a langkah 6.
+
+8. **Verifikasi Assertion di Halaman Detail:** Cocokkan **setiap field** halaman detail dengan `updatedData` (data baru hasil edit). Seluruh field WAJIB diverifikasi telah terupdate.
+
+**DILARANG:**
+- Memproses baris dengan ikon `view` (data yang sudah ter-submit) menggunakan flow Edit.
+- Menggunakan data lama (pra-edit) sebagai pembanding di tab Submit / halaman detail — gunakan `updatedData`.
+- Menggabungkan flow Edit dan flow Create dalam satu file test (lihat Naming Convention).
 
 ### 3. Lean & Fast Execution
-- **Minimalist Assertion:** Cukup pastikan setelah klik "Submit", user kembali ke halaman list atau muncul notifikasi sukses.
-- **Smart Wait:** Gunakan `cy.intercept()` pada API load tabel agar tidak melakukan aksi sebelum tabel terisi sempurna.
-- **No Decoration Check:** Abaikan pengecekan UI/statis yang tidak krusial bagi flow data.
+- **Focused Assertion:** Verifikasi WAJIB mengikuti flow yang berlaku (Section 2.a / 2.b) — toast sukses, baris di Tab "Submit", dan halaman detail. Hindari assertion di luar tiga titik tersebut.
+- **Smart Wait:** Gunakan `cy.intercept()` pada API load tabel/save/submit/detail agar tidak melakukan aksi sebelum response selesai.
+- **No Decoration Check:** Abaikan pengecekan UI/statis (warna, animasi, label dekoratif) yang tidak krusial bagi data flow. Verifikasi tetap fokus pada **kebenaran data**, bukan tampilan.
 
 ---
 
@@ -200,6 +309,10 @@ Untuk skenario **input data baru** dengan tombol **Save to Draft**, script WAJIB
 - **NO FRAGILE SELECTOR:** Dilarang class CSS dinamis atau XPath. Wajib `data-cy`/`data-testid`.
 - **NO HARDCODE DATA:** Semua data test wajib dari `cypress/fixtures/`. Dilarang hardcode di `.cy.js`.
 - **NO SELECTOR IN E2E:** Dilarang mendeklarasikan selector langsung di file test. Gunakan POM dari `cypress/pages/`.
+- **NO PREMATURE LIST RETURN:** Dilarang kembali ke halaman list setelah klik "Save to Draft" (Create) atau "Update" (Edit). Flow harus kontinu sampai Submit.
+- **NO TOAST-ONLY ASSERTION:** Dilarang mengakhiri test case hanya pada toast sukses. Verifikasi di Tab "Submit" + halaman detail adalah **WAJIB**.
+- **NO MIXED FLOW IN ONE FILE:** Dilarang menggabungkan flow Create dan flow Edit dalam satu file `.cy.js`. Pisahkan ke `-pos.cy.js` dan `-edit-pos.cy.js`.
+- **NO EDIT ON SUBMITTED ROW:** Flow Edit hanya boleh dijalankan terhadap baris dengan ikon `pencil/edit`. Baris dengan ikon `eye` (sudah submit) tidak boleh diproses oleh flow Edit.
 
 ---
 
@@ -208,8 +321,12 @@ Untuk skenario **input data baru** dengan tombol **Save to Draft**, script WAJIB
 - **Komentar:** Bahasa Indonesia singkat dan teknis.
 - **Table Logic:** Gunakan selector `tr` yang mengandung teks spesifik (misal Ticker) untuk memastikan mengklik baris yang benar.
 - **Looping:** Implementasikan `.forEach()` untuk memproses batch data dari fixture terhadap baris yang tersedia di UI.
+- **Data Fixture untuk Edit:** Fixture untuk flow Edit WAJIB menyediakan **dua dataset** — `initialData` (untuk membuat draft awal jika diperlukan) dan `updatedData` (untuk perubahan saat edit). Keduanya harus berbeda agar verifikasi pada halaman detail benar-benar membuktikan terjadinya update.
 - **Struktur Output:** Setiap kode yang digenerate harus mengikuti struktur folder wajib:
   - POM di `cypress/pages/`
-  - Test atomik per menu di `cypress/e2e/Menu/[nama-menu]/` (dengan file `-pos.cy.js` / `-neg.cy.js`)
+  - Test atomik per menu di `cypress/e2e/Menu/[nama-menu]/`:
+    - `[nama-menu]-pos.cy.js` → Flow Create Data Baru
+    - `[nama-menu]-edit-pos.cy.js` → Flow Edit Data
+    - `[nama-menu]-neg.cy.js` → Skenario Negatif
   - Test lintas-modul di `cypress/e2e/Workflow/`
   - Data di `cypress/fixtures/`
