@@ -9,7 +9,7 @@ const LIST_URL = '/document/expense-site-visit';
 describe('Pembuatan Expenses Report Site Visit - Create Data Baru', () => {
 
   beforeEach(() => {
-    cy.loginByRole('superadmin');
+    cy.loginByRole('superadmin2');
     cy.clearLocalStorage();
   });
 
