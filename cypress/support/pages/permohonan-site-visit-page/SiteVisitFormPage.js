@@ -206,7 +206,7 @@ class SiteVisitFormPage {
 
     // 2. Navigasi ke bulan target.
     // Selector eksak dari HTML: button.rdp-button_next
-    Cypress._.times(24, () s=> {
+    Cypress._.times(24, () => {
       cy.get('.rdp-caption_label').then(($label) => {
         if ($label.text().trim() === targetLabel) return;
         cy.get('.rdp-button_next').click({ force: true });
