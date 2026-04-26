@@ -308,6 +308,7 @@ Untuk skenario **edit data** terhadap data yang sudah pernah Save to Draft namun
 - **NO FIXED WAIT:** Dilarang menggunakan `cy.wait(angka)`. Gunakan `cy.intercept()`.
 - **NO FRAGILE SELECTOR:** Dilarang class CSS dinamis atau XPath. Wajib `data-cy`/`data-testid`.
 - **NO HARDCODE DATA:** Semua data test wajib dari `cypress/fixtures/`. Dilarang hardcode di `.cy.js`.
+- **FILE UPLOAD REUSE STRATEGY:** Untuk skenario upload file, **WAJIB** mengecek terlebih dahulu apakah ada file dummy yang sudah ada di `cypress/fixtures/dummy_files_upload/` dengan extension yang sesuai. Jika ada, gunakan file tersebut. Jika tidak ada, buat file dummy baru dan simpan ke folder tersebut agar dapat digunakan kembali pada skenario upload lainnya. **DILARANG** membuat multiple file duplikat dengan tipe yang sama — prioritaskan reuse.
 - **NO SELECTOR IN E2E:** Dilarang mendeklarasikan selector langsung di file test. Gunakan POM dari `cypress/pages/`.
 - **NO PREMATURE LIST RETURN:** Dilarang kembali ke halaman list setelah klik "Save to Draft" (Create) atau "Update" (Edit). Flow harus kontinu sampai Submit.
 - **NO TOAST-ONLY ASSERTION:** Dilarang mengakhiri test case hanya pada toast sukses. Verifikasi di Tab "Submit" + halaman detail adalah **WAJIB**.
@@ -336,6 +337,7 @@ Untuk skenario **edit data** terhadap data yang sudah pernah Save to Draft namun
 - **Table Logic:** Gunakan selector `tr` yang mengandung teks spesifik (misal Ticker) untuk memastikan mengklik baris yang benar.
 - **Looping:** Implementasikan `.forEach()` untuk memproses batch data dari fixture terhadap baris yang tersedia di UI.
 - **Data Fixture untuk Edit:** Fixture untuk flow Edit WAJIB menyediakan **dua dataset** — `initialData` (untuk membuat draft awal jika diperlukan) dan `updatedData` (untuk perubahan saat edit). Keduanya harus berbeda agar verifikasi pada halaman detail benar-benar membuktikan terjadinya update.
+- **Manajemen File Upload:** Untuk skenario yang membutuhkan upload file, dokumentasikan dalam fixture file name dan path yang digunakan (misal `"uploadFile": "dummy_files_upload/bukti-transfer.pdf"`). Pastikan file tersebut sudah ada di `cypress/fixtures/dummy_files_upload/` sebelum script dijalankan. Jangan duplikat file dengan extension yang sama — reuse file yang sudah ada.
 - **Struktur Output:** Setiap kode yang digenerate harus mengikuti struktur folder wajib:
   - POM di `cypress/pages/`
   - Test atomik per menu di `cypress/e2e/Menu/[nama-menu]/`:

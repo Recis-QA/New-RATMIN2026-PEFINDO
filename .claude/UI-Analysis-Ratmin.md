@@ -56,10 +56,13 @@ Saat Anda bertanya, Anda **harus memandu user** cara mengambil informasi elemen 
   cypress/fixtures/dummy_files_upload/
   ```
 
-- Jika form membutuhkan **format file khusus** (misal PDF max 2MB, JPG, XLSX), Anda **WAJIB memberitahu user** untuk menyiapkan file tersebut sebelum eksekusi test.
+- **WAJIB** melakukan strategi file reuse berikut:
+  1. **CEK TERLEBIH DAHULU:** Sebelum minta user membuat file baru, cek list file yang sudah ada di `cypress/fixtures/dummy_files_upload/`.
+  2. **JIKA ADA FILE SESUAI:** Gunakan kembali file dengan extension yang sesuai (misal jika butuh `.pdf`, cek apakah sudah ada file `.pdf` di folder tersebut).
+  3. **JIKA TIDAK ADA:** Baru notifikasi user untuk membuat file dummy baru dengan extension yang sesuai. File harus disimpan di `cypress/fixtures/dummy_files_upload/` agar dapat digunakan kembali di skenario lain.
 
-  **Contoh notifikasi:**
-  > *"Skenario ini membutuhkan file **`bukti-transfer.pdf`** berukuran maksimal 2MB. Mohon siapkan file tersebut di folder `cypress/fixtures/dummy_files_upload/` sebelum menjalankan test."*
+- **Contoh strategi reuse:**
+  > *"Skenario ini membutuhkan file bertipe **`.pdf`**. Saya akan melakukan pengecekan file yang sudah ada di `cypress/fixtures/dummy_files_upload/`. Jika belum ada file `.pdf`, mohon siapkan satu file dummy PDF (misalnya `bukti-transfer.pdf` dengan ukuran ≤ 2MB) di folder tersebut agar dapat digunakan kembali untuk skenario upload lainnya."*
 
 ### 2.3 Aturan View File (Ikon Mata)
 - Skenario **"View File"** (biasanya ikon 👁 / mata) **SECARA DEFAULT DI-SKIP**.
