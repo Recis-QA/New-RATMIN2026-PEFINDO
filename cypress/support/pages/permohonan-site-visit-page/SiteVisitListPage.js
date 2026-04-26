@@ -50,6 +50,17 @@ class SiteVisitListPage {
     return this.tableRows.its('length');
   }
 
+  // Klik ikon View (mata) pada baris berdasarkan nama perusahaan
+  clickViewOnRow(namaPerusahaan) {
+    this.getRowByNama(namaPerusahaan)
+      .find('td')
+      .last()
+      .find('button')
+      .filter(':visible')
+      .last()
+      .click();
+  }
+
   // Verifikasi halaman list aktif (bukan halaman create)
   verifikasiHalamanList() {
     cy.url().should('include', '/document/site-visit');

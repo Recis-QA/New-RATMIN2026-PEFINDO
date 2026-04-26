@@ -117,7 +117,7 @@ cypress/e2e/Workflow/
 Sebelum melakukan aksi pada tabel, AI wajib melakukan validasi pada elemen baris:
 - **Scan Baris:** Periksa kolom `Ticker`, `Nama Perusahaan`, `Jenis Pemeringkatan`, dan `Instrument Pemeringkatan`.
 - **Threshold:**
-  - JIKA minimal **3 dari 4** kolom tersebut memiliki data (bukan strip `-` atau kosong).
+  - JIKA minimal **2 dari 4** kolom tersebut memiliki data (bukan strip `-` atau kosong).
   - MAKA: Lanjutkan dengan klik ikon **Tambah (+)**, **Edit**, atau **View** pada kolom *Actions* di baris tersebut.
   - JIKA TIDAK: Skip baris tersebut atau akhiri eksekusi untuk record tersebut.
 

@@ -4,11 +4,12 @@
  * URL    : /document/site-visit
  * Role   : validUser (Maker)
  * Flow   : List → Klik "+" → Isi Form → Save To Draft → Toast Draft
- *          → Submit → Toast Submit → Kembali ke List → Validasi tabel
+ *          → Submit → Toast Submit → Tab Submit → Verifikasi Baris → Halaman Detail
  */
 
 import SiteVisitListPage from '../../../support/pages/permohonan-site-visit-page/SiteVisitListPage';
 import SiteVisitFormPage from '../../../support/pages/permohonan-site-visit-page/SiteVisitFormPage';
+import SiteVisitDetailPage from '../../../support/pages/permohonan-site-visit-page/SiteVisitDetailPage';
 
 // Data fixture dimuat secara sinkron agar dapat dipakai di scope describe/forEach
 const fixtureData = require('../../../fixtures/permohonan-site-visit.json');
@@ -125,7 +126,43 @@ describe('Positif - Permohonan Site Visit dan Management Meeting', () => {
       SiteVisitListPage.getRowByNama(data.namaPerusahaanExpected).should('be.visible');
       cy.screenshot(`pos-0${index + 1}-05-list-setelah-submit`);
 
-      cy.log(`=== [POS-0${index + 1}] SELESAI: Permohonan berhasil disubmit ===`);
+      // -------------------------------------------------------
+      // LANGKAH 15: Klik tab "Submit" untuk melihat data yang sudah disubmit
+      // -------------------------------------------------------
+      cy.log('--- [15] Klik tab Submit ---');
+      SiteVisitListPage.tabSubmit.should('be.visible').click();
+      cy.screenshot(`pos-0${index + 1}-06-tab-submit`);
+
+      // -------------------------------------------------------
+      // LANGKAH 16: Verifikasi data tampil di tab Submit (Row Gatekeeper)
+      // Cek kolom identifikasi baris: Ticker + Nama Perusahaan harus terisi (tidak kosong/strip)
+      // -------------------------------------------------------
+      cy.log(`--- [16] Verifikasi baris di tab Submit — Ticker: ${data.tickerExpected}, Nama: ${data.namaPerusahaanExpected} ---`);
+      SiteVisitListPage.getRowByNama(data.namaPerusahaanExpected)
+        .should('be.visible')
+        .within(() => {
+          cy.contains(data.tickerExpected).should('be.visible');
+        });
+      cy.screenshot(`pos-0${index + 1}-07-row-di-tab-submit`);
+
+      // -------------------------------------------------------
+      // LANGKAH 17: Klik ikon View (mata) untuk membuka halaman Detail
+      // -------------------------------------------------------
+      cy.log('--- [17] Klik ikon View pada baris yang ditemukan ---');
+      cy.intercept('GET', '**/site-visit/**').as('loadDetail');
+      SiteVisitListPage.clickViewOnRow(data.namaPerusahaanExpected);
+      cy.wait('@loadDetail');
+
+      // -------------------------------------------------------
+      // LANGKAH 18: Verifikasi seluruh data di halaman Detail
+      // Sumber kebenaran: data fixture (bukan data yang ter-render di form sebelumnya)
+      // -------------------------------------------------------
+      cy.log('--- [18] Verifikasi data di halaman Detail ---');
+      SiteVisitDetailPage.verifikasiHalamanDetail();
+      SiteVisitDetailPage.verifikasiDetail(data);
+      cy.screenshot(`pos-0${index + 1}-08-halaman-detail`);
+
+      cy.log(`=== [POS-0${index + 1}] SELESAI: Verifikasi halaman detail berhasil ===`);
     });
   });
 });
