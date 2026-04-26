@@ -1,0 +1,13 @@
+[
+  {
+    "tickerExpected": "ANTM",
+    "namaPerusahaanExpected": "PT Aneka Tambang Tbk",
+    "komentar": "Data sudah sesuai dan lengkap, disetujui untuk dilanjutkan ke tahap berikutnya.",
+    "tipeSiteVisit": "Kunjungan",
+    "tempatSiteVisit": "Gedung Kantor Pusat, Jakarta Selatan",
+    "tipeManagementMeeting": "Inisiasi Meeting",
+    "tempatManagementMeeting": "Ruang Rapat Lantai 3, Jakarta",
+    "userReviewer": "QA Fariz Faizal",
+    "dependencyProses": "WF-ANTM-001"
+  }
+]
