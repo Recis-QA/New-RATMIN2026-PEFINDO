@@ -168,3 +168,5 @@ Setelah menganalisa gambar, output yang Anda berikan kepada user **harus** beris
 > ⚠️ Jika Anda **ragu** terhadap elemen apapun pada gambar, **BERTANYALAH**. Lebih baik bertanya daripada membuat asumsi yang salah.
 
 > ⚠️ Selalu **mengacu pada evidence visual** dari gambar. Jangan merancang skenario untuk fitur yang tidak terlihat pada screenshot.
+
+> ⚠️ **DILARANG menjadikan elemen sidebar / menu navigasi sebagai assertion.** Sidebar bersifat **tidak stabil** — link aktif, label menu, ataupun struktur item dapat berubah ketika user melakukan aksi atau berpindah halaman (misal expand/collapse menu, highlight active link berubah, badge counter ter-update). Verifikasi halaman **WAJIB** menggunakan elemen pada **konten utama** (judul halaman, breadcrumb di area konten, heading form, atau URL via `cy.url()`) — **BUKAN** state sidebar.

@@ -313,6 +313,20 @@ Untuk skenario **edit data** terhadap data yang sudah pernah Save to Draft namun
 - **NO TOAST-ONLY ASSERTION:** Dilarang mengakhiri test case hanya pada toast sukses. Verifikasi di Tab "Submit" + halaman detail adalah **WAJIB**.
 - **NO MIXED FLOW IN ONE FILE:** Dilarang menggabungkan flow Create dan flow Edit dalam satu file `.cy.js`. Pisahkan ke `-pos.cy.js` dan `-edit-pos.cy.js`.
 - **NO EDIT ON SUBMITTED ROW:** Flow Edit hanya boleh dijalankan terhadap baris dengan ikon `pencil/edit`. Baris dengan ikon `eye` (sudah submit) tidak boleh diproses oleh flow Edit.
+- **NO SIDEBAR ASSERTION:** **DILARANG KERAS** menggunakan elemen sidebar (link menu, label menu aktif, highlight active item, badge/counter di sidebar) sebagai target assertion untuk verifikasi halaman/state. Sidebar bersifat dinamis — state `active`, urutan menu, ataupun visibility item dapat berubah ketika user berpindah halaman atau melakukan aksi (expand/collapse, role-based menu, counter ter-refresh). Verifikasi halaman **WAJIB** menggunakan elemen pada **konten utama**:
+  - Judul halaman / heading di area konten (`[data-cy="page-title"]`)
+  - Breadcrumb di area konten (bukan di sidebar)
+  - URL via `cy.url().should('include', '/path')`
+  - Elemen unik pada form/tabel halaman tujuan
+  ```js
+  // BENAR
+  cy.url().should('include', '/documents/checklist-compliance')
+  cy.get('[data-cy="page-title"]').should('contain.text', 'Checklist Compliance')
+  // SALAH - dilarang
+  cy.get('.sidebar-menu .active').should('contain', 'Checklist Compliance')
+  cy.get('a[href*="checklist-compliance"]').should('have.class', 'active')
+  ```
+- **NO SIDEBAR NAV CLICK FOR ROUTING:** Sejalan dengan **NO SIDEBAR NAVIGATION** — jangan klik link sidebar untuk berpindah halaman maupun untuk men-trigger assertion. Selalu gunakan `cy.visit()` langsung ke URL tujuan.
 
 ---
 
