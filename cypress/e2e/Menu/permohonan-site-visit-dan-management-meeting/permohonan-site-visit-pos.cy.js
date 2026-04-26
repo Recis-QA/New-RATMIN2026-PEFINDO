@@ -3,7 +3,8 @@
  * Menu   : Permohonan Site Visit dan Management Meeting
  * URL    : /document/site-visit
  * Role   : validUser (Maker)
- * Flow   : List → Klik "+" → Isi Form → Save To Draft → Validasi kembali ke List
+ * Flow   : List → Klik "+" → Isi Form → Save To Draft → Toast Draft
+ *          → Submit → Toast Submit → Kembali ke List → Validasi tabel
  */
 
 import SiteVisitListPage from '../../../support/pages/permohonan-site-visit-page/SiteVisitListPage';
@@ -20,7 +21,7 @@ describe('Positif - Permohonan Site Visit dan Management Meeting', () => {
   });
 
   fixtureData.forEach((data, index) => {
-    it(`[POS-0${index + 1}] Berhasil membuat Permohonan Site Visit dan Management Meeting - Save to Draft`, () => {
+    it(`[POS-0${index + 1}] Berhasil membuat dan Submit Permohonan Site Visit dan Management Meeting`, () => {
 
       // -------------------------------------------------------
       // LANGKAH 1: Navigasi ke halaman List Site Visit
@@ -90,20 +91,41 @@ describe('Positif - Permohonan Site Visit dan Management Meeting', () => {
       SiteVisitFormPage.clickSaveToDraft();
 
       // -------------------------------------------------------
-      // LANGKAH 10: Verifikasi redirect kembali ke halaman List
+      // LANGKAH 10: Verifikasi toast "draft berhasil disimpan"
       // -------------------------------------------------------
-      cy.log('--- [10] Verifikasi redirect ke halaman List ---');
-      cy.url().should('include', '/document/site-visit');
-      cy.url().should('not.include', '/create');
+      cy.log('--- [10] Verifikasi toast "draft berhasil disimpan" ---');
+      SiteVisitFormPage.verifikasiToastDraftBerhasil();
+      cy.screenshot(`pos-0${index + 1}-04b-toast-draft`);
 
       // -------------------------------------------------------
-      // LANGKAH 11: Verifikasi data perusahaan tampil di tabel
+      // LANGKAH 11: Klik tombol Submit
+      // (form masih terbuka karena tidak ada auto-redirect setelah Save To Draft)
       // -------------------------------------------------------
-      cy.log(`--- [11] Verifikasi data "${data.namaPerusahaanExpected}" muncul di tabel ---`);
+      cy.log('--- [11] Klik tombol Submit ---');
+      SiteVisitFormPage.clickSubmit();
+
+      // -------------------------------------------------------
+      // LANGKAH 12: Verifikasi toast sukses Submit
+      // -------------------------------------------------------
+      cy.log('--- [12] Verifikasi toast sukses Submit ---');
+      SiteVisitFormPage.verifikasiToastSubmitBerhasil();
+      cy.screenshot(`pos-0${index + 1}-04c-toast-submit`);
+
+      // -------------------------------------------------------
+      // LANGKAH 13: Navigasi manual ke halaman List
+      // -------------------------------------------------------
+      cy.log('--- [13] Navigasi ke halaman List ---');
+      SiteVisitListPage.visit();
+      SiteVisitListPage.verifikasiHalamanList();
+
+      // -------------------------------------------------------
+      // LANGKAH 14: Verifikasi data perusahaan tampil di tabel
+      // -------------------------------------------------------
+      cy.log(`--- [14] Verifikasi data "${data.namaPerusahaanExpected}" muncul di tabel ---`);
       SiteVisitListPage.getRowByNama(data.namaPerusahaanExpected).should('be.visible');
-      cy.screenshot(`pos-0${index + 1}-05-list-setelah-save`);
+      cy.screenshot(`pos-0${index + 1}-05-list-setelah-submit`);
 
-      cy.log(`=== [POS-0${index + 1}] SELESAI: Permohonan berhasil disimpan sebagai Draft ===`);
+      cy.log(`=== [POS-0${index + 1}] SELESAI: Permohonan berhasil disubmit ===`);
     });
   });
 });

@@ -148,11 +148,15 @@ class SiteVisitFormPage {
 
     cy.wait(500);
 
-    // Klik item hasil pencarian di dalam dropdown
-    // Gunakan cy.contains() yang di-scope ke elemen visible saja
-    cy.contains(name)
+    // Scope klik ke dalam dropdown yang sedang terbuka (bukan ke seluruh halaman).
+    // Masalah: setelah User Reviewer dipilih, badge-nya tetap visible di halaman.
+    // cy.contains(name).first() akan klik badge User Reviewer, bukan hasil search User Approver.
+    // Solusi: naik dari search input ke ancestor [data-state="open"] (Radix UI convention),
+    // sehingga contains(name) hanya mencari di dalam popup yang aktif.
+    cy.get('input[placeholder="Cari user..."]')
+      .closest('[data-state="open"]')
+      .contains(name)
       .filter(':visible')
-      .first()
       .click();
   }
 
@@ -176,84 +180,66 @@ class SiteVisitFormPage {
     this.tempatManagementMeetingInput.should('be.visible').clear().type(tempatManagementMeeting);
   }
 
-  // Pilih tanggal Reminder melalui custom calendar popup.
-  // Flow: klik trigger → navigasi bulan → klik tanggal → tekan Escape untuk tutup.
-  // dateString format: "YYYY-MM-DD" (contoh: "2026-05-08")
+  // Pilih tanggal Reminder melalui custom calendar popup (shadcn Calendar / react-day-picker v9).
+  // dateString format: "YYYY-MM-DD"
+  //
+  // Struktur HTML yang dikonfirmasi dari Inspect Element:
+  // - Tombol next month: <button class="... rdp-button_next" aria-label="Go to the Next Month">
+  // - Nav ada di .rdp-nav (sibling dari .rdp-month, keduanya di dalam .rdp-months)
+  // - Bulan aktif: <span class="rdp-caption_label">April 2026</span>
+  // - Sel tanggal: <td data-day="2026-04-09"> berisi <button class="rdp-day rdp-day_button">
+  // - Tanggal luar bulan: <td class="rdp-outside"> (flag ada di <td>, bukan <button>)
   selectReminderDate(dateString) {
     const [targetYear, targetMonth, targetDay] = dateString.split('-').map(Number);
+    const pad = (n) => String(n).padStart(2, '0');
     const monthNames = [
       'January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'
     ];
-    const targetMonthName = monthNames[targetMonth - 1];
+    const targetLabel = `${monthNames[targetMonth - 1]} ${targetYear}`;
+    // data-day attribute pada <td> menggunakan format YYYY-MM-DD
+    const targetDataDay = `${targetYear}-${pad(targetMonth)}-${pad(targetDay)}`;
 
-    // 1. Klik trigger "Pilih tanggal" untuk membuka popup kalender
+    // 1. Buka popup kalender
     cy.contains('Pilih tanggal').should('be.visible').click();
-    cy.wait(300);
+    cy.wait(400);
 
-    // 2. Navigasi ke bulan/tahun target (maks 24 iterasi).
-    // Project menggunakan Lucide icons — tombol next month pakai svg.lucide-chevron-right.
-    // Setiap iterasi: cek header, klik next jika belum cocok, skip jika sudah tepat.
+    // 2. Navigasi ke bulan target.
+    // Selector eksak dari HTML: button.rdp-button_next
     Cypress._.times(24, () => {
-      cy.get('body').then(($body) => {
-        // Cari teks header bulan/tahun kalender yang sedang tampil
-        const $header = $body.find(
-          '.rdp-caption_label, [class*="caption_label"], [class*="caption"] span, [class*="month-label"]'
-        ).first();
-        if (!$header.length) return;
-
-        const headerText = $header.text();
-        if (!headerText.includes(targetMonthName) || !headerText.includes(String(targetYear))) {
-          // Klik tombol "next month" — fallback bertingkat untuk berbagai implementasi kalender
-          cy.get(
-            'button:has(svg.lucide-chevron-right), ' +
-            'button:has(svg[class*="chevron-right"]), ' +
-            'button:has(svg[class*="ChevronRight"]), ' +
-            'button[name="next-month"], ' +
-            '.rdp-nav_button_next'
-          )
-            .filter(':visible')
-            .first()
-            .click();
-          cy.wait(150);
-        }
+      cy.get('.rdp-caption_label').then(($label) => {
+        if ($label.text().trim() === targetLabel) return;
+        cy.get('.rdp-button_next').click({ force: true });
+        cy.wait(150);
       });
     });
 
-    // 3. Klik tanggal target — gunakan regex exact match agar tidak salah klik "8" di "18"/"28"
-    // Coba berbagai selector tanggal yang umum dipakai React calendar components
-    cy.get(
-      'button[name*="day"], ' +
-      '[role="gridcell"] button, ' +
-      'td button, ' +
-      '.rdp-day'
-    )
-      .filter(':visible')
-      .not('[disabled]')
-      .not('[aria-disabled="true"]')
-      .not('[class*="outside"]')
-      .not('[class*="disabled"]')
-      .contains(new RegExp(`^${targetDay}$`))
-      .first()
-      .click();
+    // 3. Klik tanggal target menggunakan data-day attribute pada <td> (paling presisi).
+    // Ini memastikan hanya tanggal dari bulan yang benar yang diklik.
+    cy.get(`td[data-day="${targetDataDay}"]`)
+      .find('button.rdp-day_button')
+      .click({ force: true });
 
     cy.wait(200);
 
-    // 4. Tutup popup kalender dengan Escape (lebih reliable dari klik trigger yang mungkin berubah teks)
+    // 4. Tutup popup kalender
     cy.get('body').type('{esc}');
   }
 
-  // Isi section Informasi Approval
-  fillInformasiApproval({ userReviewer, userApprover, dependencyProses, deadline, reminder }) {
+  // Isi section Informasi Approval.
+  // Tanggal Reminder dihitung otomatis sebagai H-1 dari Deadline (tidak perlu di fixture).
+  fillInformasiApproval({ userReviewer, userApprover, dependencyProses, deadline }) {
     this.selectUserWithSearch('User Reviewer', userReviewer);
     this.selectUserWithSearch('User Approver', userApprover);
     this.dependencyProsesInput.should('be.visible').clear().type(dependencyProses);
     this.deadlineInput.should('be.visible').type(deadline);
 
-    // Reminder opsional — gunakan custom calendar picker, bukan input[type="date"]
-    if (reminder) {
-      this.selectReminderDate(reminder);
-    }
+    // Hitung H-1 dari deadline sebagai tanggal reminder
+    const deadlineDate = new Date(deadline);
+    deadlineDate.setDate(deadlineDate.getDate() - 1);
+    const pad = (n) => String(n).padStart(2, '0');
+    const reminderDate = `${deadlineDate.getFullYear()}-${pad(deadlineDate.getMonth() + 1)}-${pad(deadlineDate.getDate())}`;
+    this.selectReminderDate(reminderDate);
   }
 
   // Isi seluruh form sekaligus (komposit semua section)
@@ -266,16 +252,33 @@ class SiteVisitFormPage {
 
   clickSaveToDraft() {
     this.saveToDraftButton
+      .should('exist')
+      .scrollIntoView()
       .should('be.visible')
       .and('not.be.disabled')
-      .click();
+      .click({ force: true });
   }
 
   clickSubmit() {
     this.submitButton
+      .should('exist')
+      .scrollIntoView()
       .should('be.visible')
       .and('not.be.disabled')
-      .click();
+      .click({ force: true });
+  }
+
+  // Verifikasi toast notifikasi sukses setelah Save To Draft.
+  verifikasiToastDraftBerhasil() {
+    cy.contains('draft berhasil disimpan', { matchCase: false })
+      .should('be.visible');
+  }
+
+  // Verifikasi toast notifikasi sukses setelah Submit.
+  // Sesuaikan teks jika teks toast di aplikasi berbeda.
+  verifikasiToastSubmitBerhasil() {
+    cy.contains(/berhasil.*submit|submit.*berhasil/i)
+      .should('be.visible');
   }
 
   // Verifikasi halaman masih di create (tidak redirect) — digunakan di skenario negatif
