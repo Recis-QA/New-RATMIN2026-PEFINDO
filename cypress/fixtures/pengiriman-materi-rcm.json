@@ -1,0 +1,13 @@
+[
+  {
+    "tanggalRcm": "2026-05-15",
+    "uploadFile": "dummy_files_upload/Test File 1.pdf",
+    "uploadFileNama": "Test File 1.pdf",
+    "userReviewer": "QA Fariz Faizal",
+    "userApprover": "QA Fariz Faizal",
+    "dependencyProses": "WF-ANTM-002",
+    "deadline": "2026-05-25",
+    "namaPerusahaanExpected": "PT Aneka Tambang Tbk",
+    "tickerExpected": "ANTM"
+  }
+]
