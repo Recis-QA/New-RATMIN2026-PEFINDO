@@ -4,7 +4,7 @@
  * URL    : /send-documents/send-rcm
  * Role   : superadmin
  * Flow   : List → Klik "+" → Isi Form → Upload PRC Sheet → Save To Draft → Toast Draft
- *          → Submit → Toast Submit → Tab Submit → Verifikasi Baris → Halaman Detail
+ *          → Submit → Toast Submit → Tab Submit → Halaman Detail
  *
  * Reuse File : cypress/fixtures/dummy_files_upload/Test File 1.pdf
  *              (file sudah tersedia, tidak perlu membuat ulang)
@@ -137,21 +137,16 @@ describe('Positif - Pengiriman Materi RCM', () => {
       RcmListPage.verifikasiHalamanList();
 
       // -------------------------------------------------------
-      // LANGKAH 13: Verifikasi data perusahaan tampil di tabel (tab Request)
-      // -------------------------------------------------------
-      // cy.log(`--- [13] Verifikasi data "${data.namaPerusahaanExpected}" tampil di tabel ---`);
-      // RcmListPage.getRowByNama(data.namaPerusahaanExpected).should('be.visible');
-      // cy.screenshot(`rcm-pos-0${index + 1}-08-list-setelah-submit`);
-
-      // -------------------------------------------------------
-      // LANGKAH 14: Klik tab "Submit" untuk melihat data yang sudah disubmit
+      // LANGKAH 13: Klik tab "Submit" untuk melihat data yang sudah disubmit
       // -------------------------------------------------------
       cy.log('--- [14] Klik tab Submit ---');
       RcmListPage.tabSubmit.should('be.visible').click();
+      // Tunggu data tab Submit selesai dimuat sebelum verifikasi baris
+      RcmListPage.tableRows.should('have.length.greaterThan', 0);
       cy.screenshot(`rcm-pos-0${index + 1}-09-tab-submit`);
 
       // -------------------------------------------------------
-      // LANGKAH 15: Verifikasi data tampil di tab Submit (Row Gatekeeper)
+      // LANGKAH 14: Verifikasi data tampil di tab Submit (Row Gatekeeper)
       // Cek Ticker + Nama Perusahaan pada baris yang sama
       // -------------------------------------------------------
       cy.log(`--- [15] Verifikasi baris di tab Submit — Ticker: ${data.tickerExpected}, Nama: ${data.namaPerusahaanExpected} ---`);
@@ -163,7 +158,7 @@ describe('Positif - Pengiriman Materi RCM', () => {
       cy.screenshot(`rcm-pos-0${index + 1}-10-row-di-tab-submit`);
 
       // -------------------------------------------------------
-      // LANGKAH 16: Klik ikon View (mata) untuk membuka halaman Detail
+      // LANGKAH 15: Klik ikon View (mata) untuk membuka halaman Detail
       // -------------------------------------------------------
       cy.log('--- [16] Klik ikon View pada baris yang ditemukan ---');
       cy.intercept('GET', '**/send-rcm/**').as('loadDetail');
@@ -171,7 +166,7 @@ describe('Positif - Pengiriman Materi RCM', () => {
       cy.wait('@loadDetail');
 
       // -------------------------------------------------------
-      // LANGKAH 17: Verifikasi seluruh data di halaman Detail
+      // LANGKAH 16: Verifikasi seluruh data di halaman Detail
       // Sumber kebenaran: data fixture (bukan data yang ter-render di form sebelumnya)
       // -------------------------------------------------------
       cy.log('--- [17] Verifikasi data di halaman Detail ---');

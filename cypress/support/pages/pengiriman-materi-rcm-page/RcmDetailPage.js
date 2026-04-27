@@ -4,7 +4,7 @@ class RcmDetailPage {
   // ==============================
 
   verifikasiHalamanDetail() {
-    cy.url().should('include', '/send-documents/send-rcm/');
+    cy.url().should('include', '/detail');
     cy.url().should('not.include', '/create');
   }
 
@@ -35,13 +35,18 @@ class RcmDetailPage {
       .should('be.visible');
   }
 
-  // Verifikasi nama file muncul di dalam section dokumen tertentu
-  // Setelah upload, nama file ditampilkan di kolom NAMA DOKUMEN pada tabel section
+  // Verifikasi nama file muncul di tabel dokumen section tertentu.
+  // Struktur HTML (dikonfirmasi dari Inspect Element):
+  //   div.mt-8 (section wrapper)
+  //     div.mb-4 → div.flex → div.flex.items-center → div.relative → h2 "PRC Sheet"
+  //     div.overflow-x-auto → table → tbody → tr → td "Test File 1.pdf"
+  // .closest('.mt-8') naik ke section wrapper terdekat → .find('table') menemukan tabel section ini.
+  // cy.contains('h2', sectionName) mencegah match sidebar nav (<a>/<span> bukan <h2>).
   shouldHaveDocumentInSection(sectionName, expectedFileName) {
-    cy.contains(sectionName)
-      .parent()
-      .parent()
-      .contains(expectedFileName)
+    cy.contains('h2', sectionName)
+      .closest('.mt-8')
+      .find('table')
+      .contains('td', expectedFileName)
       .scrollIntoView()
       .should('be.visible');
   }
