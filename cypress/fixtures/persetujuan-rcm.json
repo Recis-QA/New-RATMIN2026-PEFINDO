@@ -1,0 +1,14 @@
+[
+  {
+    "role": "superadmin",
+    "listUrl": "/finalisasi/rcm-approval",
+    "jenisKelengkapan": "Site Visit",
+    "statusKelengkapan": "Sudah",
+    "tanggalLengkap": "2026-04-27",
+    "uploadFile": "dummy_files_upload/Sample Doc 1 - Copy.xlsx",
+    "uploadFileInvalid": "dummy_files_upload/Test File 1 - Copy.doc",
+    "maxUploadFiles": 5,
+    "expectedDraftToast": "draft berhasil disimpan",
+    "expectedSubmitToastRegex": "berhasil.*submit|submit.*berhasil"
+  }
+]
