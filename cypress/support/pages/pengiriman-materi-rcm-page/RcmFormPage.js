@@ -57,25 +57,16 @@ class RcmFormPage {
   // Strategi: temukan heading section → naik ke container → klik tombol Tambah → upload via input file
   // File path relatif terhadap project root (cypress/fixtures/...)
   uploadDocumentOnSection(sectionName, filePath) {
-    // Urutan section di halaman selalu tetap — gunakan index untuk targeting yang stabil.
-    // Pendekatan cy.contains(sectionName).parents() tidak reliable karena nama section
-    // bisa match elemen di sidebar/navigasi yang muncul lebih awal di DOM.
-    const sections = [
-      'PRC Sheet',
-      'Scoring Sheet',
-      'Full Report',
-      'Rating Rationale',
-      'Call Report MM',
-      'Call Report Site Visit',
-    ];
-    const idx = sections.indexOf(sectionName);
-
-    // Klik tombol Tambah ke-n sesuai urutan section.
-    // Semua 6 Tambah button selalu visible sepanjang proses upload (max 5 file/section).
-    cy.get('button')
+    // Section heading adalah h2 (dikonfirmasi dari Inspect Element).
+    // cy.contains('h2', sectionName) mencegah match sidebar nav (<a>/<span>/<li>).
+    // .closest(':has(button:contains("Tambah"))') naik ke ancestor TERDEKAT yang berisi
+    // tombol Tambah — tidak perlu tahu berapa level, stabil meski struktur DOM berubah.
+    cy.contains('h2', sectionName)
+      .closest(':has(button:contains("Tambah"))')
+      .find('button')
       .filter(':contains("Tambah")')
       .filter(':visible')
-      .eq(idx)
+      .first()
       .click();
 
     // Dialog upload terbuka — verifikasi via teks unik "Upload Attachment"
@@ -105,27 +96,31 @@ class RcmFormPage {
   // Masalah badge: setelah User Reviewer dipilih, badge-nya tetap visible.
   // Solusi: scope contains() ke dalam [data-state="open"] agar tidak mengenai badge lama.
   selectUserWithSearch(labelText, name) {
+    // Naik 1 level saja dari label agar tetap dalam container field ini.
+    // Struktur HTML: <div> → <label> + <div.space-y-2> → <button role="combobox">
+    // Naik 2 level masuk ke section container sehingga .find().first() selalu klik User Reviewer.
     cy.contains('label', labelText)
       .parent()
-      .parent()
-      .find('button, [role="combobox"], [role="button"], [tabindex="0"]')
+      .find('[role="combobox"]')
       .filter(':visible')
       .first()
       .click();
 
     cy.wait(500);
 
-    // Scope ke dropdown yang sedang terbuka — tidak bergantung pada placeholder text
-    // (placeholder berbeda antara User Reviewer "Cari user..." dan User Approver "Cari approver...")
-    cy.get('[data-state="open"]')
-      .find('input')
+    // Button punya aria-haspopup="dialog" — konten dropdown dirender sebagai [role="dialog"],
+    // bukan [data-state="open"]. Scope ke dialog yang sedang terbuka.
+    cy.get('[role="dialog"]')
       .should('be.visible')
+      .find('input')
+      .filter(':visible')
+      .first()
       .clear()
       .type(name);
 
     cy.wait(500);
 
-    cy.get('[data-state="open"]')
+    cy.get('[role="dialog"]')
       .contains(name)
       .filter(':visible')
       .click();
@@ -201,6 +196,9 @@ class RcmFormPage {
       .should('be.visible')
       .and('not.be.disabled')
       .click({ force: true });
+
+    // Dialog konfirmasi "Apakah Anda yakin?" muncul setelah klik Submit
+    cy.contains('button', 'Ya, Submit').should('be.visible').click();
   }
 
   verifikasiToastDraftBerhasil() {

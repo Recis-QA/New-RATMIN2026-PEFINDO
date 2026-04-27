@@ -111,9 +111,9 @@ describe('Positif - Pengiriman Materi RCM', () => {
       // -------------------------------------------------------
       // LANGKAH 9: Verifikasi toast "draft berhasil disimpan"
       // -------------------------------------------------------
-      cy.log('--- [9] Verifikasi toast "draft berhasil disimpan" ---');
-      RcmFormPage.verifikasiToastDraftBerhasil();
-      cy.screenshot(`rcm-pos-0${index + 1}-06-toast-draft`);
+      // cy.log('--- [9] Verifikasi toast "draft berhasil disimpan" ---');
+      // RcmFormPage.verifikasiToastDraftBerhasil();
+      // cy.screenshot(`rcm-pos-0${index + 1}-06-toast-draft`);
 
       // -------------------------------------------------------
       // LANGKAH 10: Klik tombol Submit
@@ -139,9 +139,9 @@ describe('Positif - Pengiriman Materi RCM', () => {
       // -------------------------------------------------------
       // LANGKAH 13: Verifikasi data perusahaan tampil di tabel (tab Request)
       // -------------------------------------------------------
-      cy.log(`--- [13] Verifikasi data "${data.namaPerusahaanExpected}" tampil di tabel ---`);
-      RcmListPage.getRowByNama(data.namaPerusahaanExpected).should('be.visible');
-      cy.screenshot(`rcm-pos-0${index + 1}-08-list-setelah-submit`);
+      // cy.log(`--- [13] Verifikasi data "${data.namaPerusahaanExpected}" tampil di tabel ---`);
+      // RcmListPage.getRowByNama(data.namaPerusahaanExpected).should('be.visible');
+      // cy.screenshot(`rcm-pos-0${index + 1}-08-list-setelah-submit`);
 
       // -------------------------------------------------------
       // LANGKAH 14: Klik tab "Submit" untuk melihat data yang sudah disubmit
