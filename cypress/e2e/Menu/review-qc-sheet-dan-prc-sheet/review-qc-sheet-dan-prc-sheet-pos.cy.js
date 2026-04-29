@@ -8,7 +8,6 @@ describe('Review QC Sheet dan PRC Sheet - Positive Flow', () => {
         // Intercept API untuk dynamic waiting
         cy.intercept('GET', '**/api/v1/review/rc-prc*').as('getDataList');
         cy.visit('/review/rc-prc');
-        //cy.wait('@getDataList');
     });
 
     it('Should successfully process Review (Comment, Reminders, and Approve)', () => {

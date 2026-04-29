@@ -1,0 +1,11 @@
+[
+  {
+    "ticker": "ANTM",
+    "namaKlien": "PT Aneka Tambang Tbk",
+    "scoringSheetFile": "cypress/fixtures/dummy_files_upload/Test File 1.pdf",
+    "dokumenPendukungFiles": [
+      "cypress/fixtures/dummy_files_upload/Test File 2.pdf",
+      "cypress/fixtures/dummy_files_upload/Test File 3.pdf"
+    ]
+  }
+]

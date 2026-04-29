@@ -1,0 +1,21 @@
+[
+  {
+    "ticker": "ANTM",
+    "namaPerusahaan": "PT Aneka Tambang Tbk",
+    "tanggalLaporanTerakhir": "2024-12-31",
+    "statusLaporanTerakhir": "audited",
+    "tanggalLaporanSebelumnya": "2023-12-31",
+    "statusLaporanSebelumnya": "audited",
+    "profileBisnis": "Bisnis profile 1",
+    "profileFinancial": "Financeial profile 1",
+    "standAloneRating": "Stand Alone Rating 1",
+    "standAloneOutlook": "Stand Alone Outlook 1",
+    "finalRating": "Final Rating 1",
+    "finalOutlook": "Final Outlook 1",
+    "parentName": "PT Induk Tambang",
+    "parentAction": "Parent Action 1",
+    "parentComment": "Komentar parent untuk pengujian otomatis",
+    "guarantor": "PT Penjamin Tambang",
+    "uploadFile": "cypress/fixtures/dummy_files_upload/Test File 1.pdf"
+  }
+]
