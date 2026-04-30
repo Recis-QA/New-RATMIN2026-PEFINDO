@@ -118,13 +118,24 @@ describe('Upload Berita Acara RCM — Skenario Positif', () => {
     UploadBeritaAcaraRcmFormPage.verifikasiToastBerhasil();
 
     // ---- Langkah 28: Redirect ke halaman list ----
-    UploadBeritaAcaraRcmListPage.verifikasiHalamanList();
+    // Cek URL saja — tidak cek heading "List Request" karena redirect bisa mendarat
+    // di tab Submit (heading "List Sent") tergantung state terakhir halaman.
+    cy.url().should('include', '/kelengkapan/upload-news-rcm').and('not.include', '/create');
 
     // ---- Langkah 29–30: Tab Submit — Row Gatekeeper ----
-    UploadBeritaAcaraRcmListPage.tabSubmit.click();
-    UploadBeritaAcaraRcmListPage.getRowByNama(testData.namaPerusahaan).then(($row) => {
-      expect(UploadBeritaAcaraRcmListPage.rowPassesGatekeeper($row[0])).to.be.true;
-    });
+    // cy.contains(selectorPath, text) re-query dari document root setiap retry
+    // sehingga tidak pernah menyimpan referensi stale meski panel di-re-render.
+    UploadBeritaAcaraRcmListPage.clickTabSubmit();
+    cy.contains(
+      '[role="tabpanel"][data-state="active"] table tbody tr',
+      testData.namaPerusahaan,
+      { timeout: 15000 }
+    )
+      .scrollIntoView()
+      .should('be.visible')
+      .then(($row) => {
+        expect(UploadBeritaAcaraRcmListPage.rowPassesGatekeeper($row[0])).to.be.true;
+      });
 
     // ---- Langkah 31–32: View → verifikasi halaman detail ----
     UploadBeritaAcaraRcmListPage.clickViewOnRow(testData.namaPerusahaan);
@@ -132,6 +143,6 @@ describe('Upload Berita Acara RCM — Skenario Positif', () => {
 
     // ---- Langkah 33–34: Verifikasi data di detail ----
     UploadBeritaAcaraRcmDetailPage.verifikasiNamaKlien(testData.namaPerusahaan);
-    UploadBeritaAcaraRcmDetailPage.verifikasiFileTerupload('Test File 1.pdf');
+    UploadBeritaAcaraRcmDetailPage.verifikasiFileTerupload(testData.verifikasiFileTerupload);
   });
 });

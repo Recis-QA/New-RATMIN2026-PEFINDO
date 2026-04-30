@@ -34,7 +34,7 @@ class ScoringHasilRcmListPage {
 
   // Row Gatekeeper — lolos jika Nama Klien terisi.
   rowPassesGatekeeper($row) {
-    const namaKlien = $row.find('td').eq(3).text().trim();
+    const namaKlien = Cypress.$($row).find('td').eq(3).text().trim();
     return namaKlien !== '-' && namaKlien !== '';
   }
 

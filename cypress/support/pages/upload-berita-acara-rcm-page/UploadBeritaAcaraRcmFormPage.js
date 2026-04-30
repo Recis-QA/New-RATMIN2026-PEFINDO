@@ -4,8 +4,7 @@ class UploadBeritaAcaraRcmFormPage {
   // ==============================
 
   verifikasiHalamanCreate() {
-    cy.url().should('include', '/kelengkapan/upload-news-rcm');
-    cy.contains('Upload Berita Acara RCM').should('be.visible');
+    cy.url().should('include', '/kelengkapan/upload-news-rcm/create');
   }
 
   // ==============================
@@ -134,6 +133,9 @@ class UploadBeritaAcaraRcmFormPage {
       .scrollIntoView()
       .should('not.be.disabled')
       .click();
+
+      // Dialog konfirmasi "Apakah Anda yakin?" muncul setelah klik Submit
+    cy.contains('button', 'Ya, Submit').should('be.visible').click();
   }
 
   // ==============================

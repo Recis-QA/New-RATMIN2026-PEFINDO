@@ -16,6 +16,7 @@
     "parentAction": "Parent Action 1",
     "parentComment": "Komentar parent untuk pengujian otomatis",
     "guarantor": "PT Penjamin Tambang",
-    "uploadFile": "cypress/fixtures/dummy_files_upload/Test File 1.pdf"
+    "uploadFile": "cypress/fixtures/dummy_files_upload/Test File 1.pdf",
+    "verifikasiFileTerupload": "Test_File_1_ver_0.pdf"
   }
 ]

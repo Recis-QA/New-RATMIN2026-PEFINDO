@@ -1,0 +1,18 @@
+[
+  {
+    "_petunjuk": "Ganti nilai 'TODO_*' dengan nilai yang valid dari aplikasi sebelum menjalankan test.",
+    "namaKlien": "PT Aneka Tambang Tbk",
+    "ticker": "ANTM",
+
+    "permohonanFinalisasi": {
+      "userReviewer": "QA Fariz Faizal",
+      "userApprover": "QA Fariz Faizal",
+      "dependencyProses": "Menunggu persetujuan komite internal sebelum finalisasi sertifikat.",
+      "deadline": "2026-05-15",
+      "tipeSoftcopy": true,
+      "tipeHardcopy": false
+    },
+
+    "comment": "Mohon segera direview sesuai jadwal yang telah ditetapkan."
+  }
+]

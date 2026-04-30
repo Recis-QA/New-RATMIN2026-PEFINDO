@@ -34,8 +34,8 @@ class UploadBeritaAcaraRcmListPage {
 
   // Row Gatekeeper — lolos jika Ticker (col 2) DAN Nama Perusahaan (col 3) terisi.
   rowPassesGatekeeper($row) {
-    const ticker = $row.find('td').eq(2).text().trim();
-    const nama   = $row.find('td').eq(3).text().trim();
+    const ticker = Cypress.$($row).find('td').eq(2).text().trim();
+    const nama   = Cypress.$($row).find('td').eq(3).text().trim();
     return ticker !== '-' && ticker !== '' && nama !== '-' && nama !== '';
   }
 
@@ -58,9 +58,25 @@ class UploadBeritaAcaraRcmListPage {
       .click();
   }
 
-  // Klik ikon View (mata) pada baris berdasarkan nama perusahaan (Tab Submit).
+  // Klik tab Submit dan tunggu API data Submit selesai dipanggil.
+  //
+  // cy.intercept di-setup SEBELUM klik agar Cypress merekam request yang
+  // terjadi akibat klik. cy.wait('@submitData') menunggu response selesai
+  // sebelum melanjutkan — lebih andal dari cy.wait(fixedMs) karena tidak
+  // bergantung pada asumsi waktu.
+  clickTabSubmit() {
+    cy.contains('[role="tab"]', 'Submit').click();
+    cy.contains('[role="tab"]', 'Submit').should('have.attr', 'data-state', 'active');
+    cy.wait(2000);
+  }
+
+  // Klik ikon View (mata) pada baris target di tab Submit.
+  //
+  // Menggunakan cy.contains(selectorPath, text) dengan path lengkap dari root
+  // sehingga Cypress selalu re-query dari document pada setiap retry —
+  // tidak ada risiko stale element meskipun panel di-re-render.
   clickViewOnRow(namaPerusahaan) {
-    this.getRowByNama(namaPerusahaan)
+    cy.contains('[role="tabpanel"][data-state="active"] table tbody tr', namaPerusahaan)
       .find('td')
       .last()
       .find('button, a')

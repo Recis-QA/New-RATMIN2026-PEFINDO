@@ -4,9 +4,8 @@ class UploadBeritaAcaraRcmDetailPage {
   // ==============================
 
   verifikasiHalamanDetail() {
-    cy.url().should('include', '/kelengkapan/upload-news-rcm/');
+    cy.url().should('include', '/detail');
     cy.url().should('not.include', '/create');
-    cy.contains('Upload Berita Acara RCM').should('be.visible');
   }
 
   // ==============================

@@ -1,0 +1,73 @@
+[
+  {
+    "_petunjuk": "TODO: Ganti semua nilai 'TODO_*' dengan nilai dropdown yang valid dari aplikasi sebelum menjalankan test.",
+    "namaKlien": "PT Aneka Tambang Tbk",
+    "ticker": "ANTM",
+
+    "formHeader": {
+      "tanggal": "2026-04-29",
+      "direktur": "Budi Santoso",
+      "jenisSertifikat": "Sertifikat"
+    },
+
+    "informasiSertifikat": {
+      "nomorSertifikat": "CERT-ANTM/001/IV/2026",
+      "tanggalCommittee": "2026-04-25",
+      "tanggalRcm": "2026-04-20"
+    },
+
+    "periode": {
+      "tanggalMulai": "2026-01-01",
+      "tanggalSelesai": "2026-12-31"
+    },
+
+    "laporanKeuangan": {
+      "tanggalMulai": "2025-01-01",
+      "kondisiStart": "Unaudited",
+      "tanggalSelesai": "2025-12-31",
+      "kondisiEnd": "Audited"
+    },
+
+    "profile": {
+      "business": "A+",
+      "keuangan": "A+"
+    },
+
+    "parent": {
+      "namaPerusahaan": "PT Induk Persada Indonesia",
+      "action": "P-0",
+      "comment": "Komentar pengujian otomatis — Sertifikat ANTM"
+    },
+
+    "standalone": {
+      "rating": "A",
+      "outlook": "Stable Outlook"
+    },
+
+    "final": {
+      "rating": "A",
+      "outlook": "Stable Outlook"
+    },
+
+    "guarantor": "PT Penjamin Utama Indonesia",
+
+    "finalRatingTable": [
+      {
+        "instrument": "Obligasi Berkelanjutan I/2026",
+        "rating": "A+",
+        "maturity": "2031-12-31"
+      }
+    ],
+
+    "pengesahan": {
+      "penandatangan2Jabatan": "Direktur Utama",
+      "penandatangan2Nama": "Agus Prabowo",
+      "penandatangan1Jabatan": "Wakil Direktur",
+      "penandatangan1Nama": "Dewi Rahayu"
+    },
+
+    "templateContent": "Sertifikat ini menerangkan bahwa PT Aneka Tambang Tbk telah mendapatkan pemeringkatan dari PEFINDO.",
+
+    "formPengantarContent": "Dengan hormat, kami sampaikan sertifikat pemeringkatan untuk PT Aneka Tambang Tbk berdasarkan hasil review komite."
+  }
+]
