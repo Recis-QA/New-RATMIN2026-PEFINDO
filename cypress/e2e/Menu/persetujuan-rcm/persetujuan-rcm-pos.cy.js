@@ -19,7 +19,10 @@ const fixtureData = require('../../../fixtures/persetujuan-rcm.json');
 
 describe('Positif - Persetujuan RCM', () => {
   beforeEach(() => {
-    cy.loginByRole('superadmin');
+    cy.fixture('role-config.json').then((roles) => {
+      const targetRole = roles['persetujuan-rcm'];
+      cy.loginByRole(targetRole);
+    });
     cy.clearLocalStorage();
   });
 

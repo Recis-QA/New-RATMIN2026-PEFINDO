@@ -35,7 +35,60 @@ Setiap file harus berada di folder yang tepat. Pelanggaran struktur ini akan dit
 
 - **Direct List Access:** Gunakan `cy.visit()` langsung ke URL daftar request (Contoh: `/documents/checklist-compliance`).
 - **Row Identification:** Identifikasi baris pada tabel berdasarkan kriteria kelengkapan data sebelum melakukan aksi.
-- **Session Auth:** Gunakan `cy.session()` agar tetap login tanpa repetisi.
+- **Session Auth:** Gunakan `cy.session()` agar tetap login tanpa repetisi via custom command `cy.loginByRole()`.
+
+---
+
+## 🔐 STANDAR LOGIN — CENTRALIZED ROLE MAPPING (STRICT)
+
+Setiap file test (`.cy.js`) **WAJIB** menggunakan login dinamis berbasis file konfigurasi pusat. **DILARANG** hardcode role/credentials langsung di file test.
+
+### Pola Wajib `beforeEach()`
+
+```js
+beforeEach(() => {
+  cy.fixture('role-config.json').then((roles) => {
+    const targetRole = roles['[nama-menu]']; // key = nama folder menu (kebab-case)
+    cy.loginByRole(targetRole);
+  });
+});
+```
+
+### Aturan Key Mapping
+
+- Key yang digunakan pada `roles['[nama-menu]']` **WAJIB identik** dengan nama folder menu dalam format `kebab-case`.
+
+| Nama Folder Menu | Key pada `role-config.json` |
+|---|---|
+| `cypress/e2e/Menu/checklist-compliance/` | `roles['checklist-compliance']` |
+| `cypress/e2e/Menu/upload-berita-acara-rcm/` | `roles['upload-berita-acara-rcm']` |
+| `cypress/e2e/Menu/rating-request/` | `roles['rating-request']` |
+
+### Integrasi dengan `master-data-klien.json`
+
+Jika skenario juga membutuhkan data dari `master-data-klien.json`, login **WAJIB** dipanggil **lebih dahulu** sebelum fixture data lain. Urutan yang benar:
+
+```js
+beforeEach(() => {
+  // 1. Login selalu di urutan pertama
+  cy.fixture('role-config.json').then((roles) => {
+    const targetRole = roles['[nama-menu]'];
+    cy.loginByRole(targetRole);
+  });
+});
+
+it('nama skenario', () => {
+  // 2. Load data fixture di dalam it block, SEBELUM cy.visit()
+  cy.fixture('master-data-klien.json').then((data) => {
+    cy.intercept('GET', '**/api/list-request**').as('loadTable');
+    cy.visit('/path/list-menu');
+    cy.wait('@loadTable');
+    // ... lanjutkan aksi dengan data
+  });
+});
+```
+
+> **Catatan:** `cy.loginByRole()` adalah custom command yang sudah terdefinisi di `cypress/support/commands.js`. Jangan re-deklarasi logic login di file test.
 
 ---
 
@@ -308,6 +361,7 @@ Untuk skenario **edit data** terhadap data yang sudah pernah Save to Draft namun
 - **NO FIXED WAIT:** Dilarang menggunakan `cy.wait(angka)`. Gunakan `cy.intercept()`.
 - **NO FRAGILE SELECTOR:** Dilarang class CSS dinamis atau XPath. Wajib `data-cy`/`data-testid`.
 - **NO HARDCODE DATA:** Semua data test wajib dari `cypress/fixtures/`. Dilarang hardcode di `.cy.js`.
+- **NO HARDCODE ROLE/LOGIN:** **DILARANG KERAS** hardcode role, username, atau password langsung di file test. Login **WAJIB** melalui `cy.fixture('role-config.json')` → `cy.loginByRole(targetRole)` di dalam `beforeEach()`. Pelanggaran ini membuat test tidak portabel antar environment.
 - **FILE UPLOAD REUSE STRATEGY:** Untuk skenario upload file, **WAJIB** mengecek terlebih dahulu apakah ada file dummy yang sudah ada di `cypress/fixtures/dummy_files_upload/` dengan extension yang sesuai. Jika ada, gunakan file tersebut. Jika tidak ada, buat file dummy baru dan simpan ke folder tersebut agar dapat digunakan kembali pada skenario upload lainnya. **DILARANG** membuat multiple file duplikat dengan tipe yang sama — prioritaskan reuse.
 - **NO SELECTOR IN E2E:** Dilarang mendeklarasikan selector langsung di file test. Gunakan POM dari `cypress/pages/`.
 - **NO PREMATURE LIST RETURN:** Dilarang kembali ke halaman list setelah klik "Save to Draft" (Create) atau "Update" (Edit). Flow harus kontinu sampai Submit.

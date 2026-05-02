@@ -19,8 +19,10 @@ const fixtureData = require('../../../fixtures/pengiriman-materi-rcm.json');
 
 describe('Positif - Pengiriman Materi RCM', () => {
   beforeEach(() => {
-    // Gunakan session login agar tidak re-login tiap test (efisiensi)
-    cy.loginByRole('superadmin');
+    cy.fixture('role-config.json').then((roles) => {
+      const targetRole = roles['pengiriman-materi-rcm'];
+      cy.loginByRole(targetRole);
+    });
     cy.clearLocalStorage();
   });
 

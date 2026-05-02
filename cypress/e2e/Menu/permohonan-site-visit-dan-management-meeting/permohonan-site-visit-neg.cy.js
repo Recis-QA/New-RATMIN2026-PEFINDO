@@ -13,8 +13,10 @@ const fixtureData = require('../../../fixtures/permohonan-site-visit.json');
 
 describe('Negatif - Permohonan Site Visit dan Management Meeting', () => {
   beforeEach(() => {
-    // Login menggunakan session, lalu navigasi ke form Create via tombol "+"
-    cy.loginByRole('superadmin');
+    cy.fixture('role-config.json').then((roles) => {
+      const targetRole = roles['permohonan-site-visit-dan-management-meeting'];
+      cy.loginByRole(targetRole);
+    });
     cy.clearLocalStorage();
 
     // Semua skenario negatif dimulai dari halaman Create

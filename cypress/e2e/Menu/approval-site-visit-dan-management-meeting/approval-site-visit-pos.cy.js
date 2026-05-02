@@ -23,7 +23,10 @@ describe('Positif - Approval Permohonan Site Visit dan Management Meeting', () =
     cy.on('uncaught:exception', (err) => {
       if (err.message.includes('descendant')) return false;
     });
-    cy.loginByRole('superadmin');
+    cy.fixture('role-config.json').then((roles) => {
+      const targetRole = roles['approval-permohonan-site-visit-dan-management-meeting'];
+      cy.loginByRole(targetRole);
+    });
     cy.clearLocalStorage();
   });
 

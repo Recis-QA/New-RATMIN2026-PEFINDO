@@ -39,7 +39,10 @@ describe('Approval Sertifikat — Skenario Positif (Approve)', () => {
       if (err.message.includes('descendant')) return false
       if (err.message.includes('ResizeObserver')) return false
     })
-    cy.loginByRole('superadmin')
+    cy.fixture('role-config.json').then((roles) => {
+      const targetRole = roles['approval-sertifikat']
+      cy.loginByRole(targetRole)
+    })
   })
 
   it('Berhasil membuka detail, mengisi comment, dan melakukan Approve', () => {

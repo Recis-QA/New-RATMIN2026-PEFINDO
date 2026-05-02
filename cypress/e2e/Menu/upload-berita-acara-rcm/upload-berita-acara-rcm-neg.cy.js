@@ -22,53 +22,62 @@ import UploadBeritaAcaraRcmListPage from '../../../support/pages/upload-berita-a
 import UploadBeritaAcaraRcmFormPage from '../../../support/pages/upload-berita-acara-rcm-page/UploadBeritaAcaraRcmFormPage';
 
 describe('Upload Berita Acara RCM — Skenario Negatif', () => {
-  let testData;
+  let allTestData = [];
 
   before(() => {
-    cy.fixture('upload-berita-acara-rcm').then((data) => {
-      testData = data[0];
+    cy.fixture('master-data-klien').then((masterData) => {
+      cy.fixture('upload-berita-acara-rcm').then((menuData) => {
+        allTestData = menuData.map((row) => ({ ...masterData, ...row }));
+      });
     });
   });
 
   beforeEach(() => {
-    cy.login();
+    cy.fixture('role-config.json').then((roles) => {
+      const targetRole = roles['upload-berita-acara-rcm'];
+      cy.loginByRole(targetRole);
+    });
   });
 
   // ----------------------------------------------------------------
   // Skenario A: Form kosong — klik Save To Draft tanpa isi field
   // ----------------------------------------------------------------
   it('Gagal Save To Draft jika semua field wajib kosong', () => {
-    // ---- Buka halaman list dan klik Create ----
-    UploadBeritaAcaraRcmListPage.visit();
-    UploadBeritaAcaraRcmListPage.verifikasiHalamanList();
-    UploadBeritaAcaraRcmListPage.clickCreateOnRow(testData.namaPerusahaan);
-    UploadBeritaAcaraRcmFormPage.verifikasiHalamanCreate();
+    allTestData.forEach((testDataMerged) => {
+      // ---- Buka halaman list dan klik Create ----
+      UploadBeritaAcaraRcmListPage.visit();
+      UploadBeritaAcaraRcmListPage.verifikasiHalamanList();
+      UploadBeritaAcaraRcmListPage.clickCreateOnRow(testDataMerged.namaPerusahaan);
+      UploadBeritaAcaraRcmFormPage.verifikasiHalamanCreate();
 
-    // ---- Klik Save To Draft tanpa isi field apapun ----
-    UploadBeritaAcaraRcmFormPage.clickSaveToDraft();
+      // ---- Klik Save To Draft tanpa isi field apapun ----
+      UploadBeritaAcaraRcmFormPage.clickSaveToDraft();
 
-    // ---- Verifikasi: halaman Create tetap tampil (tidak redirect ke list) ----
-    UploadBeritaAcaraRcmFormPage.verifikasiMasihDiHalamanCreate();
+      // ---- Verifikasi: halaman Create tetap tampil (tidak redirect ke list) ----
+      UploadBeritaAcaraRcmFormPage.verifikasiMasihDiHalamanCreate();
+    });
   });
 
   // ----------------------------------------------------------------
   // Skenario B: Field terisi, file tidak diupload — klik Save To Draft
   // ----------------------------------------------------------------
   it('Gagal Save To Draft jika file tidak diupload', () => {
-    // ---- Buka halaman list dan klik Create ----
-    UploadBeritaAcaraRcmListPage.visit();
-    UploadBeritaAcaraRcmListPage.verifikasiHalamanList();
-    UploadBeritaAcaraRcmListPage.clickCreateOnRow(testData.namaPerusahaan);
-    UploadBeritaAcaraRcmFormPage.verifikasiHalamanCreate();
+    allTestData.forEach((testDataMerged) => {
+      // ---- Buka halaman list dan klik Create ----
+      UploadBeritaAcaraRcmListPage.visit();
+      UploadBeritaAcaraRcmListPage.verifikasiHalamanList();
+      UploadBeritaAcaraRcmListPage.clickCreateOnRow(testDataMerged.namaPerusahaan);
+      UploadBeritaAcaraRcmFormPage.verifikasiHalamanCreate();
 
-    // ---- Isi semua field wajib kecuali file upload ----
-    UploadBeritaAcaraRcmFormPage.fillRequiredFields(testData);
+      // ---- Isi semua field wajib kecuali file upload ----
+      UploadBeritaAcaraRcmFormPage.fillRequiredFields(testDataMerged);
 
-    // ---- Klik Save To Draft tanpa upload file ----
-    UploadBeritaAcaraRcmFormPage.clickSaveToDraft();
+      // ---- Klik Save To Draft tanpa upload file ----
+      UploadBeritaAcaraRcmFormPage.clickSaveToDraft();
 
-    // ---- Verifikasi: error file tampil, halaman tidak redirect ----
-    UploadBeritaAcaraRcmFormPage.verifikasiErrorFileUpload();
-    UploadBeritaAcaraRcmFormPage.verifikasiMasihDiHalamanCreate();
+      // ---- Verifikasi: error file tampil, halaman tidak redirect ----
+      UploadBeritaAcaraRcmFormPage.verifikasiErrorFileUpload();
+      UploadBeritaAcaraRcmFormPage.verifikasiMasihDiHalamanCreate();
+    });
   });
 });

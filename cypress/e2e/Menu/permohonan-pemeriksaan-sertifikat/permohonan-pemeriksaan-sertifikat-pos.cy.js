@@ -38,7 +38,10 @@ describe('Permohonan Pemeriksaan Sertifikat — Skenario Positif (Create Data Ba
       if (err.message.includes('descendant')) return false
       if (err.message.includes('ResizeObserver')) return false
     })
-    cy.loginByRole('superadmin')
+    cy.fixture('role-config.json').then((roles) => {
+      const targetRole = roles['permohonan-pemeriksaan-sertifikat']
+      cy.loginByRole(targetRole)
+    })
   })
 
   it('Berhasil mengisi field wajib, save draft, submit, dan data muncul di Tab Submit', () => {

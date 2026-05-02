@@ -2,7 +2,10 @@ import ReviewPage from '../../../support/pages/review-qc-sheet-dan-prc-sheet/rev
 
 describe('Review QC Sheet dan PRC Sheet - Negative Flow', () => {
     beforeEach(() => {
-        cy.loginByRole('superadmin');
+        cy.fixture('role-config.json').then((roles) => {
+            const targetRole = roles['review-qc-sheet-dan-prc-sheet'];
+            cy.loginByRole(targetRole);
+        });
         cy.intercept('GET', '**/api/v1/review/rc-prc*').as('getDataList');
         cy.visit('/review/rc-prc');
         //cy.wait('@getDataList');

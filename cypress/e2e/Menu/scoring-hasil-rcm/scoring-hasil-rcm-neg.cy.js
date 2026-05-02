@@ -28,7 +28,10 @@ describe('Scoring Hasil RCM — Skenario Negatif', () => {
     cy.on('uncaught:exception', (err) => {
       if (err.message.includes('descendant')) return false;
     });
-    cy.loginByRole('superadmin');
+    cy.fixture('role-config.json').then((roles) => {
+      const targetRole = roles['scoring-hasil-rcm'];
+      cy.loginByRole(targetRole);
+    });
   });
 
   it('Gagal Save To Draft jika file belum diupload — tampil pesan error', () => {

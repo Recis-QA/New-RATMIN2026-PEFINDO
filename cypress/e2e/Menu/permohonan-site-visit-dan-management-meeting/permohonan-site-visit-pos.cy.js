@@ -16,8 +16,10 @@ const fixtureData = require('../../../fixtures/permohonan-site-visit.json');
 
 describe('Positif - Permohonan Site Visit dan Management Meeting', () => {
   beforeEach(() => {
-    // Gunakan session login agar tidak re-login tiap test (efisiensi)
-    cy.loginByRole('superadmin');
+    cy.fixture('role-config.json').then((roles) => {
+      const targetRole = roles['permohonan-site-visit-dan-management-meeting'];
+      cy.loginByRole(targetRole);
+    });
     cy.clearLocalStorage();
   });
 

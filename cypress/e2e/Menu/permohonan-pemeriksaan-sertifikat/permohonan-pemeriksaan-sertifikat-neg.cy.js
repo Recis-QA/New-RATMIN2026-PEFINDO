@@ -27,7 +27,10 @@ describe('Permohonan Pemeriksaan Sertifikat — Skenario Negatif', () => {
       if (err.message.includes('descendant')) return false
       if (err.message.includes('ResizeObserver')) return false
     })
-    cy.loginByRole('superadmin')
+    cy.fixture('role-config.json').then((roles) => {
+      const targetRole = roles['permohonan-pemeriksaan-sertifikat']
+      cy.loginByRole(targetRole)
+    })
 
     // Buka halaman create sebelum setiap skenario
     PermohonanPemeriksaanSertifikatListPage.visit()

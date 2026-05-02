@@ -41,7 +41,10 @@ describe('Scoring Hasil RCM — Skenario Positif', () => {
     cy.on('uncaught:exception', (err) => {
       if (err.message.includes('descendant')) return false;
     });
-    cy.loginByRole('superadmin');
+    cy.fixture('role-config.json').then((roles) => {
+      const targetRole = roles['scoring-hasil-rcm'];
+      cy.loginByRole(targetRole);
+    });
   });
 
   it('Berhasil upload Scoring Sheet & Dokumen Pendukung, submit, dan verifikasi detail', () => {

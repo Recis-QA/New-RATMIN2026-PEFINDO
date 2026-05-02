@@ -20,8 +20,10 @@ const fixtureData = require('../../../fixtures/pengiriman-materi-rcm.json');
 
 describe('Negatif - Pengiriman Materi RCM', () => {
   beforeEach(() => {
-    // Login menggunakan session, lalu navigasi ke form Create via tombol "+"
-    cy.loginByRole('superadmin');
+    cy.fixture('role-config.json').then((roles) => {
+      const targetRole = roles['pengiriman-materi-rcm'];
+      cy.loginByRole(targetRole);
+    });
     cy.clearLocalStorage();
 
     // Semua skenario negatif dimulai dari halaman Create
